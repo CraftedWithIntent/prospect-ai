@@ -22,7 +22,7 @@ Crucible is **totally independent** of Assay, flow-ledger, game-dev, and orchest
 ### Standard Prompt (Explicit Project)
 
 ```
-Work on crucible M2.1
+Work on crucible M1.1
 
 or
 
@@ -30,13 +30,13 @@ Start crucible issue #3
 
 or
 
-Finish crucible M2.5 and close it
+Finish crucible M1.5 and close it
 ```
 
 ### Standard Prompt (Implicit, When in Crucible Session)
 
 ```
-Work on M2.1
+Work on M1.1
 
 or
 
@@ -171,48 +171,48 @@ Phase 1: No exception handlers in evaluators (deferred per architecture doc).
 
 ## Crucible Phase 1 Issue Breakdown
 
-### M2.1: OpenAI-Compatible Gateway
+### M1.1: OpenAI-Compatible Gateway
 - Expose `/v1/chat/completions` compatible with OpenAI SDK
 - Handle both streaming & non-streaming requests
 - Accept OPENAI_BASE_URL override
 - **Files:** `src/crucible/infrastructure/server.py`, `src/crucible/infrastructure/proxy_gateway.py`
 
-### M2.2: Hybrid Two-Tier Cache (L1 Exact + L2 Semantic)
+### M1.2: Hybrid Two-Tier Cache (L1 Exact + L2 Semantic)
 - L1: SHA-256 hash lookup (< 1ms)
 - L2: Local embedding generation + cosine similarity (< 15ms)
 - Configurable threshold (default 0.92)
 - **Files:** `src/crucible/core/similarity.py`, `src/crucible/core/normalizer.py`
 
-### M2.3: Request Normalization & Caching
+### M1.3: Request Normalization & Caching
 - Strip system prompts, canonicalize JSON
 - Produce deterministic SHA-256 keys
 - Handle message edge cases
 - **Files:** `src/crucible/core/normalizer.py`, `tests/test_normalizer.py`
 
-### M2.4: Local Embedding Generation (ONNX)
+### M1.4: Local Embedding Generation (ONNX)
 - Use FastEmbed / all-MiniLM-L6-v2 for in-process embeddings
 - Sub-15ms latency per request
 - **Files:** `src/crucible/infrastructure/embeddings.py`
 
-### M2.5: Storage Backends (In-Memory + SQLite-vec)
+### M1.5: Storage Backends (In-Memory + SQLite-vec)
 - Abstract storage interface
 - Memory backend (Phase 1 MVP)
 - SQLite-vec backend (persistent, MVP+)
 - **Files:** `src/crucible/infrastructure/storage/base.py`, `memory.py`, `sqlite_vec.py`
 
-### M2.6: Smart Fallback Routing
+### M1.6: Smart Fallback Routing
 - Detect 429 / 5xx from primary provider
 - Failover to secondary API key or provider (Anthropic, Azure, Bedrock)
 - Prioritize routes
 - **Files:** `src/crucible/core/router.py`, `src/crucible/infrastructure/proxy_gateway.py`
 
-### M2.7: CLI & Metrics Dashboard
+### M1.7: CLI & Metrics Dashboard
 - `crucible start --port 8080 --similarity 0.92`
 - Live terminal output: hit rate, tokens saved, cost delta
 - Prometheus metrics export
 - **Files:** `src/crucible/cli.py`, `src/crucible/infrastructure/telemetry.py`
 
-### M2.8: Docker & Deployment Artifacts
+### M1.8: Docker & Deployment Artifacts
 - Multi-stage Dockerfile (slim image, <200MB)
 - GitHub Action for GHCR + Docker Hub publish
 - Kubernetes manifests (optional starter template)
@@ -222,7 +222,7 @@ Phase 1: No exception handlers in evaluators (deferred per architecture doc).
 
 ## Expected Outcomes Per Issue
 
-### Features (M2.1–M2.7)
+### Features (M1.1–M1.7)
 
 **You'll get:**
 - Feature branch with passing tests
@@ -236,7 +236,7 @@ Phase 1: No exception handlers in evaluators (deferred per architecture doc).
 - Performance benchmark met (e.g., L2 hit < 15ms)
 - Code merged to main
 
-### Deployment (M2.8)
+### Deployment (M1.8)
 
 **You'll get:**
 - Docker image built and pushed to GHCR
@@ -252,14 +252,14 @@ Phase 1: No exception handlers in evaluators (deferred per architecture doc).
 
 If I finish in one session:
 ```
-✅ crucible M2.3 complete. PR ready: #5
+✅ crucible M1.3 complete. PR ready: #5
 Status: Request normalization + cache key generation done.
 Latency benchmark: <1ms on hash lookups, tests at 99.2% coverage.
 ```
 
 If work spans multiple sessions:
 ```
-🌿 Working on crucible M2.2 (Two-Tier Cache). 
+🌿 Working on crucible M1.2 (Two-Tier Cache). 
 Status: L1 exact match done, L2 semantic similarity 70% complete. 
 Blocker: None. 
 ETA: Next session (4 hours more).
@@ -270,7 +270,7 @@ ETA: Next session (4 hours more).
 Example: FastEmbed library version incompatibility.
 
 ```
-🚫 BLOCKED: crucible M2.4 (Embeddings)
+🚫 BLOCKED: crucible M1.4 (Embeddings)
 Reason: FastEmbed 0.2.0 has breaking changes in ONNX model loading
 Options:
   A) Pin to FastEmbed 0.1.5 (stable)
@@ -282,8 +282,8 @@ Awaiting: Your direction
 ### When Done
 
 ```
-✅ crucible M2.X merged to main. Branch deleted.
-Ready for crucible M2.Y or any other project.
+✅ crucible M1.X merged to main. Branch deleted.
+Ready for crucible M1.Y or any other project.
 ```
 
 ---
@@ -338,33 +338,33 @@ I'll propose and wait for your decision. Never assume design on Crucible.
 
 ## Examples: Full Work Cycles
 
-### Example 1: Simple Feature (M2.3 — Request Normalization)
+### Example 1: Simple Feature (M1.3 — Request Normalization)
 
 ```
-You: Work on crucible M2.3
+You: Work on crucible M1.3
 
 Me: 
 ✓ Routing: ~/.openclaw/workspaces/crucible/
 ✓ Pre-work checklist passed (main clean, no open PRs)
-✓ Branch created: feature/M2.3-request-normalizer
+✓ Branch created: feature/M1.3-request-normalizer
 ✓ Code written: src/crucible/core/normalizer.py
 ✓ Tests added: tests/test_normalizer.py (98% coverage)
 ✓ Build passing: ruff ✓ | pyright ✓ | pytest ✓
-✓ PR created: #4 "M2.3: Request Normalization & Caching"
+✓ PR created: #4 "M1.3: Request Normalization & Caching"
 ```
 
 You review → approve → I merge → Issue #6 closes automatically.
 
 ---
 
-### Example 2: Blocked Work (M2.4 — Embeddings)
+### Example 2: Blocked Work (M1.4 — Embeddings)
 
 ```
-You: Start crucible M2.4
+You: Start crucible M1.4
 
 Me:
 ✓ Pre-work checklist passed
-✓ Branch created: feature/M2.4-embeddings
+✓ Branch created: feature/M1.4-embeddings
 ✗ BLOCKED: FastEmbed ONNX model loading
   (API incompatibility with installed version)
 
@@ -376,10 +376,10 @@ You decide → I resume → Complete as usual.
 
 ---
 
-### Example 3: Performance-Critical Issue (M2.2 — Two-Tier Cache)
+### Example 3: Performance-Critical Issue (M1.2 — Two-Tier Cache)
 
 ```
-You: Finish crucible M2.2 with latency benchmarks
+You: Finish crucible M1.2 with latency benchmarks
 
 Me:
 ✓ L1 exact match implemented (0.8ms P50, 1.2ms P99)
@@ -423,7 +423,7 @@ You approve latency targets → I merge → Issue closes.
 If you're unsure how to direct work on Crucible, default to:
 
 ```
-Work on crucible M2.X
+Work on crucible M1.X
 ```
 
 I'll handle the rest. This document is your reference for what happens behind the scenes.
@@ -432,4 +432,4 @@ I'll handle the rest. This document is your reference for what happens behind th
 
 **Ash, Primary Orchestrator**  
 Crucible Project (v0.1.0-dev) — Independent Workspace  
-Last Updated: 2026-08-30
+Last Updated: 2026-08-30 (M2.x → M1.x milestone numbering corrected)
