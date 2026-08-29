@@ -2,7 +2,7 @@
 
 ![Crucible](https://img.shields.io/badge/Crucible-Semantic%20Cache-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue) ![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
 
-**High-performance reverse proxy that intercepts, deduplicates, and caches semantically identical model queries—preventing wasted token compute, slashing API bills by 30–60%, and cutting latency to under 15ms.**
+**High-performance reverse proxy that intercepts, deduplicates, and caches semantically identical model queries—preventing wasted token compute and cutting latency to under 15ms.**
 
 ## The Problem
 
@@ -10,13 +10,13 @@ LLM inference is expensive, slow, and non-deterministic. Applications frequently
 
 ## The Solution: Crucible
 
-Crucible is the "pick and shovel" every production AI app needs: an intelligent gateway between your backend and upstream LLM providers. By adding semantic vector similarity matching and smart fallback routing, you immediately cut API costs by 30–60% and drop response latency to sub-20ms **without changing application logic**.
+Crucible is the "pick and shovel" every production AI app needs: an intelligent gateway between your backend and upstream LLM providers. By adding semantic vector similarity matching and smart fallback routing, you immediately improve performance and reduce operational overhead.
 
 ### Core Value Proposition
 
 | Metric | Without Crucible | With Crucible |
 |--------|------------------|---------------|
-| Repeated / Semantic Query Cost | 100% full API rate | $0.00 (0 tokens) |
+| Repeated / Semantic Query Lookup | Upstream LLM required | Cached (0 tokens) |
 | Response Latency (Cache Hit) | 1,200ms – 3,500ms | < 15ms |
 | Implementation Effort | Massive app refactoring | Change 1 line (`base_url`) |
 | Provider Downtime Impact | App goes down / hangs | Instant fallback to secondary LLM |
@@ -77,8 +77,6 @@ Output:
 Cache Statistics:
   Total Requests: 1,248
   Cache Hits: 742 (59.4%)
-  Tokens Saved: 124,512
-  Cost Saved: $3.74 USD
   Avg Latency (Hit): 8.2ms
   Avg Latency (Miss): 1,850ms
 ```
@@ -96,20 +94,19 @@ Cache Statistics:
 - ✅ **Smart Fallback Routing** — Automatic failover to secondary API keys or providers (429/5xx errors)
 - ✅ **Embedded Storage** — In-memory and SQLite-vec backends (zero external dependencies)
 - ✅ **Streaming SSE Support** — Fully supports `stream: true` with zero latency overhead
-- ✅ **CLI & Metrics** — Live dashboard with hit rates, token savings, and cost attribution
+- ✅ **CLI & Metrics** — Live dashboard with hit rates and latency insights
 - ✅ **Docker & PyPI** — Single command deployment
 
 ### Roadmap
 
-**Phase 2: Commercial Extensions**
-- Crucible Cloud: Globally distributed edge-proxy network (Cloudflare workers, AWS Lambda@Edge)
+**Phase 2: Enhanced Features**
+- Distributed edge-proxy network support
 - Centralized semantic cache sharing across microservices
-- Real-time cost dashboards and FinOps attribution
 - Smart invalidation hooks (tag-based, user-based, document-based)
 - PII scrubbing before caching (regex + NER)
 - Customer-managed encryption keys (CMEK)
 
-**Phase 3: Enterprise**
+**Phase 3: Advanced Capabilities**
 - Multi-tenant rate limiting and budget guardrails
 - Audit logging and compliance reports
 - Private VPC deployments
@@ -258,18 +255,8 @@ logging:
 |----------|------------|------------|-------|
 | L1 Exact Match (hash lookup) | 0.8ms | 1.2ms | In-memory hash table |
 | L2 Semantic Match (embedding + similarity) | 12ms | 18ms | ONNX model + cosine calc |
-| Cache Miss → OpenAI | 1,200ms | 3,500ms | Upstream latency |
-| **Savings per Cache Hit** | **99%** | **99%** | 1,200–3,500ms → <15ms |
-
-### Token & Cost Savings
-
-**Assumption:** 1,000 requests, 30% semantic cache hit rate (realistic for production apps)
-
-| Metric | Without Cache | With Cache | Savings |
-|--------|---------------|-----------|---------|
-| Requests to Upstream | 1,000 | 700 | 300 (30%) |
-| Tokens Consumed | 500,000 | 350,000 | 150,000 (30%) |
-| Cost (GPT-4) | $15.00 | $10.50 | **$4.50 (30%)** |
+| Cache Miss → Upstream | 1,200ms | 3,500ms | Upstream latency |
+| **Latency Improvement (Cache Hit)** | **99%** | **99%** | 1,200–3,500ms → <15ms |
 
 ---
 
@@ -343,28 +330,6 @@ spec:
             memory: "512Mi"
             cpu: "500m"
 ```
-
----
-
-## Monetization & Commercial Tiers
-
-### Free & Open Source (`crucible` binary)
-- Local standalone proxy + Docker container
-- Embedded local vector storage (SQLite-vec / in-memory)
-- Exact & semantic caching, streaming support, Prometheus metrics
-- **Use Case:** Dev/staging, self-hosted, edge deployments
-
-### Crucible Cloud ($29–$149 / mo + $0.0005 per cached request)
-- Global Edge Anycast: Sub-10ms cache lookups worldwide
-- Centralized Dashboard: Hit-rate analytics, cost savings graphs
-- Dynamic Cache Invalidation: By tag, user ID, collection
-- **Use Case:** Production SaaS, multi-region apps, managed infrastructure
-
-### Enterprise & Governance ($15K–$60K+ ACV)
-- PII Sanitization: Redact sensitive data before caching
-- Multi-Tenant FinOps: Per-team token budgets and rate caps
-- Private VPC / Dedicated Single-Tenant: CMEK (bring your own encryption key)
-- **Use Case:** Finance, healthcare, regulated industries
 
 ---
 
