@@ -353,6 +353,12 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
+**No Shared Dependencies:** Crucible is completely decoupled from other CraftedWithIntent products. It works standalone as a semantic caching reverse proxy for any LLM API.
+
+---
+
+---
+
 ## Questions? Support?
 
 - 📖 [Documentation](https://docs.crucible.ai)
