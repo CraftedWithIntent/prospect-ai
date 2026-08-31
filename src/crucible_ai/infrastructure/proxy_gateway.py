@@ -101,33 +101,37 @@ class ProxyGateway:
         request_body["stream"] = True
 
         full_response = ""
-        request_ok, response_stream = await self._open_stream(url, headers, request_body)
-        if not request_ok:
-            yield "data: {'error': 'Failed to open upstream connection'}"
-            return
+        async with self.client.stream(
+            "POST", url, json=request_body, headers=headers
+        ) as response:
+            if response.status_code != 200:
+                error_text = await response.aread()
+                logger.error(f"Upstream error {response.status_code}: {error_text}")
+                yield f"data: {{'error': 'Upstream error {response.status_code}'}}"
+                return
 
-        async for line in response_stream:
-            if not line.strip():
-                continue
+            async for line in response.aiter_lines():
+                if not line.strip():
+                    continue
 
-            if line.startswith("data: "):
-                data_str = line[6:].strip()
+                if line.startswith("data: "):
+                    data_str = line[6:].strip()
 
-                if data_str == "[DONE]":
-                    if self.cache_backend and full_response:
-                        self._enqueue_cache_store(cache_key, full_response, {})
-                    yield "data: [DONE]"
-                    break
+                    if data_str == "[DONE]":
+                        if self.cache_backend and full_response:
+                            self._enqueue_cache_store(cache_key, full_response, {})
+                        yield "data: [DONE]"
+                        break
 
-                parse_ok, chunk = self._parse_sse_chunk(data_str)
-                if parse_ok:
-                    content = chunk.get("choices", [{}])[0].get("delta", {}).get("content", "")
-                    if content:
-                        full_response += content
-                    yield f"data: {data_str}"
-                else:
-                    logger.warning(f"Failed to parse SSE chunk: {data_str}")
-                    yield f"data: {data_str}"
+                    parse_ok, chunk = self._parse_sse_chunk(data_str)
+                    if parse_ok:
+                        content = chunk.get("choices", [{}])[0].get("delta", {}).get("content", "")
+                        if content:
+                            full_response += content
+                        yield f"data: {data_str}"
+                    else:
+                        logger.warning(f"Failed to parse SSE chunk: {data_str}")
+                        yield f"data: {data_str}"
 
     async def _send_request(
         self,
@@ -140,16 +144,6 @@ class ProxyGateway:
         if result.status_code == 200:
             return result.status_code, result.json()
         return result.status_code, {"error": result.text}
-
-    async def _open_stream(
-        self,
-        url: str,
-        headers: dict[str, str],
-        body: dict[str, Any],
-    ) -> tuple[bool, AsyncGenerator[str, None]]:
-        """Open streaming connection. Returns (success, line_generator)."""
-        response = self.client.stream("POST", url, json=body, headers=headers)
-        return True, response.__aenter__().aiter_lines()
 
     def _parse_sse_chunk(self, data_str: str) -> tuple[bool, dict[str, Any]]:
         """Parse SSE JSON chunk. Returns (success, parsed_dict)."""
