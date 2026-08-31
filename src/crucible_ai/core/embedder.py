@@ -22,7 +22,8 @@ class EmbeddingModel:
     def _load_model(self) -> None:
         """Load ONNX FastEmbed model lazily."""
         try:
-            from fastembed import FlagModel
+            from fastembed import FlagModel  # type: ignore[import-untyped]
+
             self.model = FlagModel(self.model_name, cache_folder=".cache/fastembed")
             logger.info(f"Loaded embedding model: {self.model_name}")
         except ImportError:
