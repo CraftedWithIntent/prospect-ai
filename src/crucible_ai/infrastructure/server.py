@@ -9,6 +9,10 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
 from crucible_ai.core.normalizer import normalize_payload, payload_to_cache_key
+from crucible_ai.core.embedder import get_embedder
+from crucible_ai.infrastructure.proxy_gateway import ProxyGateway
+from crucible_ai.infrastructure.storage.base import CacheStorageBackend
+
 from crucible_ai.infrastructure.proxy_gateway import ProxyGateway
 from crucible_ai.infrastructure.storage.base import CacheStorageBackend
 
@@ -102,6 +106,27 @@ class OpenAIGateway:
                         "stop",
                     )
 
+
+            # L1 miss: try L2 semantic cache
+            embedder = get_embedder()
+            query_embedding = embedder.embed(json.dumps(messages))
+            if query_embedding:
+                l2_results = await self.storage.search_semantic(
+                    query_embedding, self.similarity_threshold, limit=1
+                )
+                if l2_results:
+                    cached_entry, similarity_score = l2_results[0]
+                    logger.info(
+                        f"L2 cache hit: {cached_entry.request_hash[:8]}... "
+                        f"(similarity={similarity_score:.4f})"
+                    )
+                    if cached_entry.response_text and model:
+                        return self._format_response(
+                            cached_entry.response_text,
+                            model,
+                            cached_entry.tokens_used,
+                            "stop",
+                        )
             if stream:
                 return StreamingResponse(
                     self.proxy.stream_upstream(body, cache_key),
