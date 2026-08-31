@@ -1,11 +1,9 @@
 """M1.2 Integration Tests: Server L2 Semantic Cache Lookup"""
 
-import json
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
 
-from crucible_ai.domain.types import CacheEntry, SimilarityScore
-from crucible_ai.infrastructure.server import OpenAIGateway
+
+from crucible_ai.domain.types import CacheEntry
 from crucible_ai.infrastructure.storage.memory import MemoryCacheBackend
 
 
