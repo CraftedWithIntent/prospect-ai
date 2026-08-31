@@ -85,10 +85,12 @@ exclude_lines = [
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-select = ["E", "F", "W", "I", "N", "UP", "C4", "PIE", "PT", "RUF"]
-ignore = ["E501"]
 
-[tool.ruff.isort]
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "C4", "PIE", "PT", "RUF"]
+ignore = ["E501", "W293"]  # E501: line too long, W293: blank line with whitespace
+
+[tool.ruff.lint.isort]
 known-first-party = ["crucible_ai"]
 
 [tool.pyright]
