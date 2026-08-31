@@ -22,7 +22,7 @@ def normalize_messages(messages: list[dict[str, Any]]) -> str:
     - Canonicalizes JSON representation
     - Removes extra whitespace
     """
-    normalized = []
+    normalized: list[dict[str, str]] = []
     
     for msg in messages:
         role = msg.get("role", "").strip().lower()

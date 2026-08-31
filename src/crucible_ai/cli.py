@@ -1,7 +1,7 @@
 """Command-line interface for Crucible."""
 
 import typer
-from crucible import __version__
+from crucible_ai import __version__
 
 app = typer.Typer(help="Crucible: Semantic cache & reverse proxy for LLM inference")
 

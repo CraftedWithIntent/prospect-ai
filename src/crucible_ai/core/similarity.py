@@ -5,7 +5,7 @@ No I/O, no side effects. Pure mathematical operations.
 """
 
 import math
-from crucible.domain.types import SimilarityScore
+from crucible_ai.domain.types import SimilarityScore
 
 
 def cosine_similarity(vec_a: list[float], vec_b: list[float]) -> float:

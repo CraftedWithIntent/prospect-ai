@@ -1,7 +1,8 @@
 """Abstract base class for pluggable cache storage backends."""
 
 from abc import ABC, abstractmethod
-from crucible.domain.types import CacheEntry
+from typing import Any
+from crucible_ai.domain.types import CacheEntry
 
 
 class CacheStorageBackend(ABC):
@@ -47,6 +48,6 @@ class CacheStorageBackend(ABC):
         pass
 
     @abstractmethod
-    async def stats(self) -> dict:
+    async def stats(self) -> dict[str, Any]:
         """Return storage statistics (entry count, memory usage, etc.)."""
         pass

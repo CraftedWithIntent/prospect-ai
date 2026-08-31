@@ -1,18 +1,18 @@
 """Crucible core functional logic."""
 
-from crucible.core.normalizer import (
+from crucible_ai.core.normalizer import (
     normalize_messages,
     normalize_payload,
     payload_to_cache_key,
     strip_whitespace,
 )
-from crucible.core.router import (
+from crucible_ai.core.router import (
     is_rate_limited,
     select_fallback_route,
     select_primary_route,
     should_fallback,
 )
-from crucible.core.similarity import (
+from crucible_ai.core.similarity import (
     batch_similarity_scores,
     cosine_similarity,
     evaluate_similarity,

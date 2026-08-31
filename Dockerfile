@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for ultra-lightweight Crucible proxy
+# Multi-stage Dockerfile for ultra-lightweight Crucible AI proxy
 
 FROM python:3.11-slim as builder
 
@@ -27,7 +27,7 @@ WORKDIR /app
 COPY --from=builder /wheels /wheels
 
 # Install runtime dependencies
-RUN pip install --no-cache-dir --no-index --find-links /wheels crucible-proxy && \
+RUN pip install --no-cache-dir --no-index --find-links /wheels crucible-ai && \
     rm -rf /wheels
 
 # Expose default port
@@ -37,6 +37,6 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')" || exit 1
 
-# Run Crucible
-ENTRYPOINT ["crucible"]
+# Run Crucible AI
+ENTRYPOINT ["crucible-ai"]
 CMD ["start", "--port", "8080"]

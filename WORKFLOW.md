@@ -1,6 +1,6 @@
-# WORKFLOW.md - How to Prompt Ash for Work on Crucible
+# WORKFLOW.md - How to Prompt Ash for Work on Crucible AI
 
-This document defines how to direct work on Crucible (semantic cache & reverse proxy for LLM inference) and what to expect from execution.
+This document defines how to direct work on Crucible AI (semantic cache & reverse proxy for LLM inference) and what to expect from execution.
 
 **tl;dr:** Specify project context (implicit or explicit) → pick an issue → I handle the rest (branch → code → test → PR → review).
 
@@ -17,7 +17,7 @@ Crucible is **totally independent** of Assay, flow-ledger, game-dev, and orchest
 
 ---
 
-## Directing Work on Crucible
+## Directing Work on Crucible AI
 
 ### Standard Prompt (Explicit Project)
 
@@ -75,7 +75,7 @@ Before I write any code on Crucible:
    uv pip install -e ".[dev]"
    ruff check src tests
    pyright src
-   pytest tests --cov=src/crucible
+   pytest tests --cov=src/crucible_ai
    python -m build
    ```
    All must pass (0 errors, 0 warnings).
@@ -115,7 +115,7 @@ Strict mode, 0 errors.
 
 **Tests:**
 ```bash
-pytest tests --cov=src/crucible
+pytest tests --cov=src/crucible_ai
 ```
 - All tests passing
 - Coverage ≥ 80%
@@ -175,42 +175,42 @@ Phase 1: No exception handlers in evaluators (deferred per architecture doc).
 - Expose `/v1/chat/completions` compatible with OpenAI SDK
 - Handle both streaming & non-streaming requests
 - Accept OPENAI_BASE_URL override
-- **Files:** `src/crucible/infrastructure/server.py`, `src/crucible/infrastructure/proxy_gateway.py`
+- **Files:** `src/crucible_ai/infrastructure/server.py`, `src/crucible_ai/infrastructure/proxy_gateway.py`
 
 ### M1.2: Hybrid Two-Tier Cache (L1 Exact + L2 Semantic)
 - L1: SHA-256 hash lookup (< 1ms)
 - L2: Local embedding generation + cosine similarity (< 15ms)
 - Configurable threshold (default 0.92)
-- **Files:** `src/crucible/core/similarity.py`, `src/crucible/core/normalizer.py`
+- **Files:** `src/crucible_ai/core/similarity.py`, `src/crucible_ai/core/normalizer.py`
 
 ### M1.3: Request Normalization & Caching
 - Strip system prompts, canonicalize JSON
 - Produce deterministic SHA-256 keys
 - Handle message edge cases
-- **Files:** `src/crucible/core/normalizer.py`, `tests/test_normalizer.py`
+- **Files:** `src/crucible_ai/core/normalizer.py`, `tests/test_normalizer.py`
 
 ### M1.4: Local Embedding Generation (ONNX)
 - Use FastEmbed / all-MiniLM-L6-v2 for in-process embeddings
 - Sub-15ms latency per request
-- **Files:** `src/crucible/infrastructure/embeddings.py`
+- **Files:** `src/crucible_ai/infrastructure/embeddings.py`
 
 ### M1.5: Storage Backends (In-Memory + SQLite-vec)
 - Abstract storage interface
 - Memory backend (Phase 1 MVP)
 - SQLite-vec backend (persistent, MVP+)
-- **Files:** `src/crucible/infrastructure/storage/base.py`, `memory.py`, `sqlite_vec.py`
+- **Files:** `src/crucible_ai/infrastructure/storage/base.py`, `memory.py`, `sqlite_vec.py`
 
 ### M1.6: Smart Fallback Routing
 - Detect 429 / 5xx from primary provider
 - Failover to secondary API key or provider (Anthropic, Azure, Bedrock)
 - Prioritize routes
-- **Files:** `src/crucible/core/router.py`, `src/crucible/infrastructure/proxy_gateway.py`
+- **Files:** `src/crucible_ai/core/router.py`, `src/crucible_ai/infrastructure/proxy_gateway.py`
 
 ### M1.7: CLI & Metrics Dashboard
-- `crucible start --port 8080 --similarity 0.92`
+- `crucible-ai start --port 8080 --similarity 0.92`
 - Live terminal output: hit rate, tokens saved, cost delta
 - Prometheus metrics export
-- **Files:** `src/crucible/cli.py`, `src/crucible/infrastructure/telemetry.py`
+- **Files:** `src/crucible_ai/cli.py`, `src/crucible_ai/infrastructure/telemetry.py`
 
 ### M1.8: Docker & Deployment Artifacts
 - Multi-stage Dockerfile (slim image, <200MB)
@@ -347,7 +347,7 @@ Me:
 ✓ Routing: ~/.openclaw/workspaces/crucible/
 ✓ Pre-work checklist passed (main clean, no open PRs)
 ✓ Branch created: feature/M1.3-request-normalizer
-✓ Code written: src/crucible/core/normalizer.py
+✓ Code written: src/crucible_ai/core/normalizer.py
 ✓ Tests added: tests/test_normalizer.py (98% coverage)
 ✓ Build passing: ruff ✓ | pyright ✓ | pytest ✓
 ✓ PR created: #4 "M1.3: Request Normalization & Caching"

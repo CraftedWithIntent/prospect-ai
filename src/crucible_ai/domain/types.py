@@ -6,12 +6,12 @@ No I/O, no side effects — just value objects.
 """
 
 from dataclasses import dataclass, field
+from enum import Enum, StrEnum
 from typing import Any, Literal
-from enum import Enum
 import hashlib
 
 
-class CacheHitType(str, Enum):
+class CacheHitType(StrEnum):
     """Type of cache hit."""
     EXACT = "exact"  # L1: SHA-256 hash match
     SEMANTIC = "semantic"  # L2: Cosine similarity >= threshold
@@ -19,7 +19,7 @@ class CacheHitType(str, Enum):
     FALLBACK = "fallback"  # Hit from secondary provider
 
 
-class ProviderName(str, Enum):
+class ProviderName(StrEnum):
     """Supported LLM providers."""
     OPENAI = "openai"
     ANTHROPIC = "anthropic"
@@ -36,7 +36,7 @@ class CacheEntry:
     finish_reason: str  # stop, length, etc.
     tokens_used: int  # Cached token count
     cached_at: float  # Unix timestamp (seconds)
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)  # type: ignore[misc]
 
     @staticmethod
     def from_request(
@@ -62,7 +62,7 @@ class CacheEntry:
 @dataclass(frozen=True)
 class SimilarityScore:
     """Result of semantic similarity comparison."""
-    score: float  # 0.0–1.0 cosine similarity
+    score: float  # 0.0-1.0 cosine similarity
     threshold: float  # Required threshold for cache hit
     is_hit: bool  # score >= threshold
     distance: float = field(init=False)  # Euclidean distance (1 - score)

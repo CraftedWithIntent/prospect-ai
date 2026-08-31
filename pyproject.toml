@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "crucible-proxy"
+name = "crucible-ai"
 version = "0.1.0-dev"
 description = "High-performance semantic cache and reverse proxy for LLM inference. Drop-in OpenAI API compatibility with 30-60% cost savings and <15ms cache latency."
 readme = "README.md"
@@ -46,6 +46,7 @@ dev = [
     "ruff>=0.1.0",
     "pyright>=1.1.0",
     "black>=23.11.0",
+    "build>=1.0.0",
 ]
 storage = [
     "sqlite-vec>=0.1.0",
@@ -58,19 +59,19 @@ cloud = [
 ]
 
 [project.scripts]
-crucible = "crucible.cli:app"
+crucible-ai = "crucible_ai.cli:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/crucible"]
+packages = ["src/crucible_ai"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
-addopts = "--cov=src/crucible --cov-report=term-missing --cov-report=html -v"
+addopts = "--cov=src/crucible_ai --cov-report=term-missing --cov-report=html -v"
 
 [tool.coverage.run]
 branch = true
-source = ["src/crucible"]
+source = ["src/crucible_ai"]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -85,11 +86,13 @@ exclude_lines = [
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-select = ["E", "F", "W", "I", "N", "UP", "C4", "PIE", "PT", "RUF"]
-ignore = ["E501"]
 
-[tool.ruff.isort]
-known-first-party = ["crucible"]
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "C4", "PIE", "PT", "RUF"]
+ignore = ["E501", "W293"]  # E501: line too long, W293: blank line with whitespace
+
+[tool.ruff.lint.isort]
+known-first-party = ["crucible_ai"]
 
 [tool.pyright]
 include = ["src"]

@@ -1,8 +1,9 @@
 """In-memory cache storage backend."""
 
-from crucible.domain.types import CacheEntry
-from crucible.infrastructure.storage.base import CacheStorageBackend
-from crucible.core.similarity import cosine_similarity
+from typing import Any
+from crucible_ai.domain.types import CacheEntry
+from crucible_ai.infrastructure.storage.base import CacheStorageBackend
+from crucible_ai.core.similarity import cosine_similarity
 
 
 class MemoryCacheBackend(CacheStorageBackend):
@@ -21,7 +22,7 @@ class MemoryCacheBackend(CacheStorageBackend):
         self, embedding: list[float], threshold: float, limit: int = 10
     ) -> list[tuple[CacheEntry, float]]:
         """O(n) semantic search with threshold filtering."""
-        results = []
+        results: list[tuple[CacheEntry, float]] = []
 
         for _, cached_entry in self._embedding_cache:
             score = cosine_similarity(embedding, cached_entry.embedding_vector)
@@ -60,7 +61,7 @@ class MemoryCacheBackend(CacheStorageBackend):
         # Phase 1: Not implemented
         return 0
 
-    async def stats(self) -> dict:
+    async def stats(self) -> dict[str, Any]:
         """Return storage statistics."""
         return {
             "backend": "memory",
