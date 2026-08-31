@@ -5,6 +5,7 @@ No I/O, no side effects. Pure mathematical operations.
 """
 
 import math
+
 from crucible_ai.domain.types import SimilarityScore
 
 
