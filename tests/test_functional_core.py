@@ -1,4 +1,4 @@
-"""Functional tests for Crucible core logic."""
+"""Functional tests for Prospect core logic."""
 
 import pytest
 

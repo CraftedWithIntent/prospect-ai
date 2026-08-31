@@ -57,4 +57,4 @@ All complaints will be reviewed and investigated promptly and fairly.
 
 ---
 
-**Thank you for making Crucible AI a welcoming community!**
+**Thank you for making Prospect AI a welcoming community!**

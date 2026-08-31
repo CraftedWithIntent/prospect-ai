@@ -306,7 +306,7 @@ prospect-ai/
 
 ## Configuration
 
-### crucible.yaml
+### prospect.yaml
 
 ```yaml
 # Prospect gateway configuration
@@ -393,7 +393,7 @@ prospect-ai start --similarity 0.95
 ```yaml
 version: '3.9'
 services:
-  crucible:
+  prospect:
     image: ghcr.io/craftedwithintent/prospect-ai:latest
     ports:
       - "8000:8000"
@@ -406,9 +406,9 @@ services:
     ports:
       - "9000:9000"
     environment:
-      OPENAI_BASE_URL: "http://crucible:8000/v1"
+      OPENAI_BASE_URL: "http://prospect:8000/v1"
     depends_on:
-      - crucible
+      - prospect
 ```
 
 Run:
@@ -433,7 +433,7 @@ Commands:
 Options:
   --version           Show version and exit
   --help              Show this message and exit
-  --config FILE       Path to config file (default: crucible.yaml)
+  --config FILE       Path to config file (default: prospect.yaml)
 
 Examples:
   prospect-ai start --port 8000 --similarity 0.92
@@ -528,19 +528,19 @@ docker run -p 8000:8000 \
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crucible-proxy
+  name: prospect-proxy
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: crucible
+      app: prospect
   template:
     metadata:
       labels:
-        app: crucible
+        app: prospect
     spec:
       containers:
-      - name: crucible
+      - name: prospect
         image: ghcr.io/craftedwithintent/prospect-ai:latest
         ports:
         - containerPort: 8000
@@ -548,7 +548,7 @@ spec:
         - name: OPENAI_API_KEY
           valueFrom:
             secretKeyRef:
-              name: crucible-secrets
+              name: prospect-secrets
               key: openai-api-key
         livenessProbe:
           httpGet:

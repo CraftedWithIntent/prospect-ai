@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-The Crucible AI team takes security vulnerabilities seriously. If you discover a security vulnerability in Crucible AI, please report it to us responsibly.
+The Prospect AI team takes security vulnerabilities seriously. If you discover a security vulnerability in Prospect AI, please report it to us responsibly.
 
 ### How to Report
 
@@ -30,20 +30,20 @@ The Crucible AI team takes security vulnerabilities seriously. If you discover a
 
 ### Security Best Practices
 
-When using Crucible AI in production:
+When using Prospect AI in production:
 
 1. **API Keys** — Never commit upstream API keys to git. Use environment variables.
 2. **Cache Storage** — Ensure access control:
    - SQLite: Restrict file permissions (mode 0600)
    - Redis: Enable AUTH and restrict network access
 3. **Sensitive Data** — Avoid caching responses containing PII/credentials.
-4. **Dependencies** — Regularly run `pip install --upgrade crucible-ai`
+4. **Dependencies** — Regularly run `pip install --upgrade prospect-ai`
 5. **CI/CD Integration** — Use GitHub Secrets for API keys (never commit to public repos)
 6. **Network Security** — Use TLS/HTTPS in production (reverse proxy recommended)
 
 ### Scope
 
-Crucible AI is designed for LLM inference optimization in controlled environments. It is **not** intended for:
+Prospect AI is designed for LLM inference optimization in controlled environments. It is **not** intended for:
 
 - Handling sensitive user data directly (PII, credentials)
 - Serving as a security scanning tool

@@ -1,4 +1,4 @@
-"""Crucible domain models."""
+"""Prospect domain models."""
 
 from prospect_ai.domain.types import (
     CachedResponse,

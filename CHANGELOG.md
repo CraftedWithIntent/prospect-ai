@@ -1,41 +1,41 @@
 # Changelog
 
-All notable changes to Crucible AI are documented in this file.
+All notable changes to Prospect AI are documented in this file.
 
 ## [1.0.0] - 2026-09-01
 
 ### 🎉 Production Release: M1.1 + M1.2 Complete
 
-Crucible AI v1.0.0 delivers a fully functional semantic cache + reverse proxy for LLM inference optimization.
+Prospect AI v1.0.0 delivers a fully functional semantic cache + reverse proxy for LLM inference optimization.
 
 ### ✨ Features
 
 #### M1.1: OpenAI-Compatible Gateway (Production Ready)
-- **FastAPI Gateway** (`src/crucible_ai/infrastructure/server.py`)
+- **FastAPI Gateway** (`src/prospect_ai/infrastructure/server.py`)
   - Full OpenAI API compatibility (`/v1/chat/completions`)
   - Request normalization + SHA-256 hashing
   - Cache-aware response formatting
   - Error handling + logging
 
-- **Async Proxy Gateway** (`src/crucible_ai/infrastructure/proxy_gateway.py`)
+- **Async Proxy Gateway** (`src/prospect_ai/infrastructure/proxy_gateway.py`)
   - Upstream HTTP relay (OpenAI, Anthropic, Bedrock compatible)
   - Streaming support (chunked transfer encoding)
   - Background cache storage
   - Configurable concurrency control
 
-- **Pluggable Storage Backends** (`src/crucible_ai/infrastructure/storage/`)
+- **Pluggable Storage Backends** (`src/prospect_ai/infrastructure/storage/`)
   - In-memory cache + L2 semantic search
   - Abstract `CacheStorageBackend` for extensibility
   - 100% deterministic test validation
 
 #### M1.2: Semantic Cache with L2 Similarity Matching (New)
-- **ONNX Embedder** (`src/crucible_ai/core/embedder.py`)
+- **ONNX Embedder** (`src/prospect_ai/core/embedder.py`)
   - Local FastEmbed (BGE-small model, 384-dim vectors)
   - Deterministic output (same input = same vector every time)
   - <10ms generation latency
   - Works offline, no API calls
 
-- **Semantic Similarity Scoring** (`src/crucible_ai/core/similarity.py`)
+- **Semantic Similarity Scoring** (`src/prospect_ai/core/similarity.py`)
   - Cosine similarity implementation (vectorized)
   - Configurable threshold (default 0.92)
   - Pure function, no side effects
@@ -118,7 +118,7 @@ Crucible AI v1.0.0 delivers a fully functional semantic cache + reverse proxy fo
 
 No breaking changes. v1.0.0 is backward compatible with:
 - `prospect-ai` PyPI package (new name)
-- `crucible_ai` Python module
+- `prospect_ai` Python module
 - OpenAI-compatible API `/v1/chat/completions`
 
 ### 📝 Changelog Entries by PR

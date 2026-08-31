@@ -1,5 +1,5 @@
 """
-Immutable domain types for Crucible semantic cache.
+Immutable domain types for Prospect semantic cache.
 
 Pure data structures representing cache entries, routing decisions, and metrics.
 No I/O, no side effects — just value objects.

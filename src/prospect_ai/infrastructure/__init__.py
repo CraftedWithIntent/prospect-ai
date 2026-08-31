@@ -1,1 +1,1 @@
-"""Crucible infrastructure (I/O, server, storage, telemetry)."""
+"""Prospect infrastructure (I/O, server, storage, telemetry)."""
