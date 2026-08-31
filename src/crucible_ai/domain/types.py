@@ -36,7 +36,7 @@ class CacheEntry:
     finish_reason: str  # stop, length, etc.
     tokens_used: int  # Cached token count
     cached_at: float  # Unix timestamp (seconds)
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=lambda: {})
 
     @staticmethod
     def from_request(
