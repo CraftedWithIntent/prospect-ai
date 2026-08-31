@@ -28,7 +28,7 @@ jobs:
         run: uv pip install --system -e ".[dev]"
 
       - name: Lint with ruff
-        run: ruff check src tests
+        run: uv run ruff check src tests --fix
 
       - name: Type check with pyright
         run: pyright src
