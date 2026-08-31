@@ -2,10 +2,10 @@
 
 import pytest
 
-from crucible_ai.core.embedder import EmbeddingModel, get_embedder
-from crucible_ai.core.similarity import cosine_similarity, evaluate_similarity, find_best_match
-from crucible_ai.domain.types import SimilarityScore, CacheEntry
-from crucible_ai.infrastructure.storage.memory import MemoryCacheBackend
+from prospect_ai.core.embedder import EmbeddingModel, get_embedder
+from prospect_ai.core.similarity import cosine_similarity, evaluate_similarity, find_best_match
+from prospect_ai.domain.types import SimilarityScore, CacheEntry
+from prospect_ai.infrastructure.storage.memory import MemoryCacheBackend
 
 
 class TestEmbedder:

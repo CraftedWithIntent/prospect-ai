@@ -34,7 +34,7 @@ jobs:
         run: pyright src
 
       - name: Run tests with pytest
-        run: uv run pytest tests --cov=src/crucible_ai --cov-report=term-missing --cov-report=xml
+        run: uv run pytest tests --cov=src/prospect_ai --cov-report=term-missing --cov-report=xml
 
       - name: Build package
         run: python -m build

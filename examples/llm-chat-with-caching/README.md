@@ -49,7 +49,7 @@ The **LLM Chat App** demonstrates:
 
 ```bash
 # Ensure Crucible AI is running
-crucible-ai \
+prospect-ai \
   --host 0.0.0.0 \
   --port 8000 \
   --upstream-base-url https://api.openai.com \
@@ -59,11 +59,11 @@ crucible-ai \
 Or use Docker:
 ```bash
 docker run -d \
-  --name crucible-ai \
+  --name prospect-ai \
   -p 8000:8000 \
   -e CRUCIBLE_UPSTREAM_BASE_URL="https://api.openai.com" \
   -e CRUCIBLE_UPSTREAM_API_KEY="$OPENAI_API_KEY" \
-  ghcr.io/craftedwithintent/crucible-ai:1.0.0
+  ghcr.io/craftedwithintent/prospect-ai:1.0.0
 ```
 
 ### 2. Install Dependencies
@@ -178,7 +178,7 @@ docker build -t llm-chat-with-caching .
 # Run with Crucible
 docker run -d \
   --name llm-chat \
-  --link crucible-ai:crucible \
+  --link prospect-ai:crucible \
   -p 9000:9000 \
   -e CRUCIBLE_BASE_URL="http://crucible:8000" \
   -e OPENAI_API_KEY="$OPENAI_API_KEY" \
@@ -370,6 +370,6 @@ grep CRUCIBLE_BASE_URL app.py
 ---
 
 **Questions?** 
-- GitHub Issues: https://github.com/CraftedWithIntent/crucible-ai/issues
+- GitHub Issues: https://github.com/CraftedWithIntent/prospect-ai/issues
 - Architecture: [docs/adr/001-architecture.md](../../docs/adr/001-architecture.md)
 - Deployment: [docs/DEPLOYMENT.md](../../docs/DEPLOYMENT.md)

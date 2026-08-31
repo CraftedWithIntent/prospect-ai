@@ -6,7 +6,7 @@ Determines which upstream provider to use based on availability and fallback rul
 
 from typing import Any
 
-from crucible_ai.domain.types import ProviderName, UpstreamRoute
+from prospect_ai.domain.types import ProviderName, UpstreamRoute
 
 
 def select_primary_route(payload: dict[str, Any]) -> UpstreamRoute:

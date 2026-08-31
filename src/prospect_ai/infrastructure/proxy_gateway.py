@@ -9,10 +9,10 @@ from dataclasses import dataclass
 from typing import Any
 
 import httpx
-from crucible_ai.core.embedder import get_embedder
+from prospect_ai.core.embedder import get_embedder
 
-from crucible_ai.domain.types import CacheEntry
-from crucible_ai.infrastructure.storage.base import CacheStorageBackend
+from prospect_ai.domain.types import CacheEntry
+from prospect_ai.infrastructure.storage.base import CacheStorageBackend
 
 logger = logging.getLogger(__name__)
 

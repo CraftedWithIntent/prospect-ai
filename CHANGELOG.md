@@ -117,7 +117,7 @@ Crucible AI v1.0.0 delivers a fully functional semantic cache + reverse proxy fo
 ### 🔄 Migration from v0.1.x
 
 No breaking changes. v1.0.0 is backward compatible with:
-- `crucible-ai` PyPI package (new name)
+- `prospect-ai` PyPI package (new name)
 - `crucible_ai` Python module
 - OpenAI-compatible API `/v1/chat/completions`
 

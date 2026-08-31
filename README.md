@@ -18,16 +18,16 @@ LLM inference is expensive and slow. Applications pay full token costs even for 
 
 ```bash
 # Via pip
-pip install crucible-cache
+pip install prospect-ai
 
 # Via Docker
 docker run -p 8000:8000 \
   -e OPENAI_API_KEY=sk-... \
-  ghcr.io/craftedwithintent/crucible-ai:latest
+  ghcr.io/craftedwithintent/prospect-ai:latest
 
 # From source
-git clone https://github.com/CraftedWithIntent/crucible-ai.git
-cd crucible-ai
+git clone https://github.com/CraftedWithIntent/prospect-ai.git
+cd prospect-ai
 pip install -e .
 ```
 
@@ -36,7 +36,7 @@ pip install -e .
 #### 1. Start Crucible AI Proxy
 
 ```bash
-crucible-cache start --port 8000 --similarity 0.92
+prospect-ai start --port 8000 --similarity 0.92
 ```
 
 #### 2. Replace OPENAI_BASE_URL in Your App
@@ -60,7 +60,7 @@ That's it. Cache hits are automatic.
 #### 3. Monitor Cache Performance
 
 ```bash
-crucible-cache stats
+prospect-ai stats
 ```
 
 Output:
@@ -86,7 +86,7 @@ A FastAPI service that uses Crucible to cache LLM responses:
 **1. Start Crucible proxy (Terminal 1)**
 
 ```bash
-crucible-cache start --port 8000 --similarity 0.92
+prospect-ai start --port 8000 --similarity 0.92
 ```
 
 **2. Create chat service (`app.py`)**
@@ -170,7 +170,7 @@ pip install -r requirements.txt
 export OPENAI_API_KEY="your-api-key-here"
 
 # Terminal 1: Start Crucible
-crucible-cache start --port 8000
+prospect-ai start --port 8000
 
 # Terminal 2: Start chat app
 python app.py
@@ -259,7 +259,7 @@ User App receives response (cached or fresh)
 ### Codebase Layout
 
 ```
-crucible-ai/
+prospect-ai/
 ├── .github/workflows/
 │   ├── ci.yml                  # Test matrix (3.11/3.12), linting, build
 │   └── publish.yml             # PyPI + Docker release
@@ -275,9 +275,9 @@ crucible-ai/
 │   ├── DEPLOYMENT.md           # Production deployment guide
 │   └── adr/
 │       └── 001-architecture.md # Architecture decision record
-├── src/crucible_ai/
+├── src/prospect_ai/
 │   ├── __init__.py             # Public API
-│   ├── cli.py                  # Typer CLI (`crucible-cache start`, `crucible-cache stats`)
+│   ├── cli.py                  # Typer CLI (`prospect-ai start`, `prospect-ai stats`)
 │   ├── domain/
 │   │   └── types.py            # Immutable domain models (CacheEntry, Route, etc.)
 │   ├── core/
@@ -366,26 +366,26 @@ logging:
 
 ```bash
 # Start proxy
-crucible-cache start --port 8000 --similarity 0.90
+prospect-ai start --port 8000 --similarity 0.90
 
 # In another terminal, check stats
-crucible-cache stats
+prospect-ai stats
 
 # View cache entries
-crucible-cache cache list
+prospect-ai cache list
 
 # Clear cache
-crucible-cache cache clear
+prospect-ai cache clear
 ```
 
 ### Custom Similarity Threshold
 
 ```bash
 # Aggressive caching (more hits, lower precision)
-crucible-cache start --similarity 0.85
+prospect-ai start --similarity 0.85
 
 # Conservative (fewer hits, higher precision)
-crucible-cache start --similarity 0.95
+prospect-ai start --similarity 0.95
 ```
 
 ### With Docker Compose
@@ -394,7 +394,7 @@ crucible-cache start --similarity 0.95
 version: '3.9'
 services:
   crucible:
-    image: ghcr.io/craftedwithintent/crucible-ai:latest
+    image: ghcr.io/craftedwithintent/prospect-ai:latest
     ports:
       - "8000:8000"
     environment:
@@ -421,7 +421,7 @@ docker-compose up
 ## CLI Reference
 
 ```
-crucible-cache [OPTIONS] COMMAND
+prospect-ai [OPTIONS] COMMAND
 
 Commands:
   start       Start the Crucible proxy gateway
@@ -436,16 +436,16 @@ Options:
   --config FILE       Path to config file (default: crucible.yaml)
 
 Examples:
-  crucible-cache start --port 8000 --similarity 0.92
-  crucible-cache stats --format json
-  crucible-cache cache list --limit 100
-  crucible-cache config validate
+  prospect-ai start --port 8000 --similarity 0.92
+  prospect-ai stats --format json
+  prospect-ai cache list --limit 100
+  prospect-ai config validate
 ```
 
 ### start
 
 ```
-Usage: crucible-cache start [OPTIONS]
+Usage: prospect-ai start [OPTIONS]
 
 Start the Crucible AI proxy gateway.
 
@@ -462,7 +462,7 @@ Options:
 ### stats
 
 ```
-Usage: crucible-cache stats [OPTIONS]
+Usage: prospect-ai stats [OPTIONS]
 
 Display cache performance metrics.
 
@@ -503,23 +503,23 @@ Options:
 pip install -e ".[dev]"
 
 # Run tests
-pytest tests/ -v --cov=src/crucible_ai
+pytest tests/ -v --cov=src/prospect_ai
 
 # Start proxy
-crucible-cache start --port 8000 --similarity 0.92
+prospect-ai start --port 8000 --similarity 0.92
 ```
 
 ### Docker
 
 ```bash
 # Build locally
-docker build -t crucible-ai:latest .
+docker build -t prospect-ai:latest .
 
 # Run with environment variables
 docker run -p 8000:8000 \
   -e OPENAI_API_KEY=sk-... \
   -e ANTHROPIC_API_KEY=sk-ant-... \
-  crucible-ai:latest
+  prospect-ai:latest
 ```
 
 ### Kubernetes
@@ -541,7 +541,7 @@ spec:
     spec:
       containers:
       - name: crucible
-        image: ghcr.io/craftedwithintent/crucible-ai:latest
+        image: ghcr.io/craftedwithintent/prospect-ai:latest
         ports:
         - containerPort: 8000
         env:
@@ -579,7 +579,7 @@ pip install -e ".[dev]"
 pytest tests/ -v
 
 # Run with coverage
-pytest tests/ --cov=src/crucible_ai --cov-report=term-missing
+pytest tests/ --cov=src/prospect_ai --cov-report=term-missing
 
 # Run only unit tests (fast)
 pytest tests/test_semantic_cache.py -v
@@ -615,7 +615,7 @@ This is an open-source project. Contributions welcome!
    ```bash
    ruff check src/ tests/
    pyright src/ tests/
-   pytest tests/ --cov=src/crucible_ai
+   pytest tests/ --cov=src/prospect_ai
    ```
 6. Update [CHANGELOG.md](CHANGELOG.md) with your changes
 7. Submit a PR with a clear description
@@ -648,6 +648,6 @@ MIT License. See [LICENSE](LICENSE) for details.
 - 📖 [Documentation](../../docs/)
 - 📋 [Deployment Guide](docs/DEPLOYMENT.md)
 - 🏗️ [Architecture Decision Record](docs/adr/001-architecture.md)
-- 🐛 [GitHub Issues](https://github.com/CraftedWithIntent/crucible-ai/issues)
-- 💬 [GitHub Discussions](https://github.com/CraftedWithIntent/crucible-ai/discussions)
+- 🐛 [GitHub Issues](https://github.com/CraftedWithIntent/prospect-ai/issues)
+- 💬 [GitHub Discussions](https://github.com/CraftedWithIntent/prospect-ai/discussions)
 - 📧 [dev@crafted.ai](mailto:dev@crafted.ai)

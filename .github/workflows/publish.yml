@@ -40,8 +40,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/craftedwithintent/crucible-ai:latest
-            ghcr.io/craftedwithintent/crucible-ai:${{ github.ref_name }}
+            ghcr.io/craftedwithintent/prospect-ai:latest
+            ghcr.io/craftedwithintent/prospect-ai:${{ github.ref_name }}
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
@@ -53,5 +53,5 @@ jobs:
           body: |
             Release ${{ github.ref_name }}
             
-            PyPI: https://pypi.org/project/crucible-ai/
-            Docker: ghcr.io/craftedwithintent/crucible-ai:${{ github.ref_name }}
+            PyPI: https://pypi.org/project/prospect-ai/
+            Docker: ghcr.io/craftedwithintent/prospect-ai:${{ github.ref_name }}

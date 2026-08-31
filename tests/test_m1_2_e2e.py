@@ -4,9 +4,9 @@ import json
 import pytest
 from unittest.mock import AsyncMock, patch
 
-from crucible_ai.domain.types import CacheEntry
-from crucible_ai.infrastructure.storage.memory import MemoryCacheBackend
-from crucible_ai.infrastructure.proxy_gateway import ProxyGateway
+from prospect_ai.domain.types import CacheEntry
+from prospect_ai.infrastructure.storage.memory import MemoryCacheBackend
+from prospect_ai.infrastructure.proxy_gateway import ProxyGateway
 
 
 @pytest.mark.asyncio
@@ -50,8 +50,8 @@ async def test_e2e_upstream_miss_then_l2_hit():
         "stream": False,
     }
 
-    from crucible_ai.core.embedder import get_embedder
-    from crucible_ai.core.similarity import cosine_similarity
+    from prospect_ai.core.embedder import get_embedder
+    from prospect_ai.core.similarity import cosine_similarity
 
     embedder = get_embedder()
     query1_embed = embedder.embed(json.dumps(request_body_1["messages"]))
@@ -69,7 +69,7 @@ async def test_e2e_upstream_miss_then_l2_hit():
 async def test_e2e_embedding_determinism():
     """Test that embeddings are deterministic."""
 
-    from crucible_ai.core.embedder import get_embedder
+    from prospect_ai.core.embedder import get_embedder
 
     embedder = get_embedder()
 
@@ -85,8 +85,8 @@ async def test_e2e_embedding_determinism():
 async def test_e2e_semantic_similarity():
     """Test that similar texts produce similar embeddings."""
 
-    from crucible_ai.core.embedder import get_embedder
-    from crucible_ai.core.similarity import cosine_similarity
+    from prospect_ai.core.embedder import get_embedder
+    from prospect_ai.core.similarity import cosine_similarity
 
     embedder = get_embedder()
 
@@ -107,7 +107,7 @@ async def test_e2e_cache_growth():
 
     storage = MemoryCacheBackend()
 
-    from crucible_ai.core.embedder import get_embedder
+    from prospect_ai.core.embedder import get_embedder
 
     embedder = get_embedder()
 

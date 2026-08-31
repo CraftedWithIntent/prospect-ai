@@ -20,7 +20,7 @@ A FastAPI chat service that uses Crucible AI as a reverse proxy to reduce LLM co
 **Quick Start:**
 ```bash
 # Terminal 1: Start Crucible proxy
-crucible-ai --host 0.0.0.0 --port 8000 \
+prospect-ai --host 0.0.0.0 --port 8000 \
   --upstream-base-url https://api.openai.com \
   --upstream-api-key $OPENAI_API_KEY
 
@@ -171,7 +171,7 @@ Savings: $750/month (50% reduction)
 
 ## Contributing
 
-Have a great example? Open a PR at https://github.com/CraftedWithIntent/crucible-ai/pulls
+Have a great example? Open a PR at https://github.com/CraftedWithIntent/prospect-ai/pulls
 
 ---
 
@@ -179,4 +179,4 @@ Have a great example? Open a PR at https://github.com/CraftedWithIntent/crucible
 
 - **Architecture:** [../../docs/adr/001-architecture.md](../../docs/adr/001-architecture.md)
 - **Deployment Guide:** [../../docs/DEPLOYMENT.md](../../docs/DEPLOYMENT.md)
-- **GitHub:** https://github.com/CraftedWithIntent/crucible-ai
+- **GitHub:** https://github.com/CraftedWithIntent/prospect-ai

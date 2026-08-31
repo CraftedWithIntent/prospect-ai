@@ -2,9 +2,9 @@
 
 from typing import Any
 
-from crucible_ai.core.similarity import cosine_similarity
-from crucible_ai.domain.types import CacheEntry
-from crucible_ai.infrastructure.storage.base import CacheStorageBackend
+from prospect_ai.core.similarity import cosine_similarity
+from prospect_ai.domain.types import CacheEntry
+from prospect_ai.infrastructure.storage.base import CacheStorageBackend
 
 
 class MemoryCacheBackend(CacheStorageBackend):

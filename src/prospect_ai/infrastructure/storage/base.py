@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from crucible_ai.domain.types import CacheEntry
+from prospect_ai.domain.types import CacheEntry
 
 
 class CacheStorageBackend(ABC):

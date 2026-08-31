@@ -2,8 +2,8 @@
 
 import pytest
 
-from crucible_ai.domain.types import CacheEntry
-from crucible_ai.infrastructure.storage.memory import MemoryCacheBackend
+from prospect_ai.domain.types import CacheEntry
+from prospect_ai.infrastructure.storage.memory import MemoryCacheBackend
 
 
 @pytest.mark.asyncio

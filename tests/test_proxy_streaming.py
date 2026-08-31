@@ -12,9 +12,9 @@ import json
 import pytest
 from unittest.mock import patch
 
-from crucible_ai.core.normalizer import payload_to_cache_key
-from crucible_ai.infrastructure.storage.memory import MemoryCacheBackend
-from crucible_ai.domain.types import CacheEntry
+from prospect_ai.core.normalizer import payload_to_cache_key
+from prospect_ai.infrastructure.storage.memory import MemoryCacheBackend
+from prospect_ai.domain.types import CacheEntry
 import time
 
 

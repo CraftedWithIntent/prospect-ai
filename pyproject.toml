@@ -3,7 +3,7 @@ requires = ["hatchling", "build>=1.0.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "crucible-cache"
+name = "prospect-ai"
 version = "1.0.0"
 description = "Semantic cache + reverse proxy for LLM inference"
 readme = "README.md"
@@ -40,14 +40,14 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/CraftedWithIntent/crucible-ai"
-Repository = "https://github.com/CraftedWithIntent/crucible-ai.git"
-Issues = "https://github.com/CraftedWithIntent/crucible-ai/issues"
-Documentation = "https://github.com/CraftedWithIntent/crucible-ai#readme"
+Homepage = "https://github.com/CraftedWithIntent/prospect-ai"
+Repository = "https://github.com/CraftedWithIntent/prospect-ai.git"
+Issues = "https://github.com/CraftedWithIntent/prospect-ai/issues"
+Documentation = "https://github.com/CraftedWithIntent/prospect-ai#readme"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/crucible_ai"]
-include = ["src/crucible_ai/py.typed"]
+packages = ["src/prospect_ai"]
+include = ["src/prospect_ai/py.typed"]
 
 [tool.ruff]
 line-length = 100

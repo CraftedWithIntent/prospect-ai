@@ -8,13 +8,13 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
-from crucible_ai.core.normalizer import normalize_payload, payload_to_cache_key
-from crucible_ai.core.embedder import get_embedder
-from crucible_ai.infrastructure.proxy_gateway import ProxyGateway
-from crucible_ai.infrastructure.storage.base import CacheStorageBackend
+from prospect_ai.core.normalizer import normalize_payload, payload_to_cache_key
+from prospect_ai.core.embedder import get_embedder
+from prospect_ai.infrastructure.proxy_gateway import ProxyGateway
+from prospect_ai.infrastructure.storage.base import CacheStorageBackend
 
-from crucible_ai.infrastructure.proxy_gateway import ProxyGateway
-from crucible_ai.infrastructure.storage.base import CacheStorageBackend
+from prospect_ai.infrastructure.proxy_gateway import ProxyGateway
+from prospect_ai.infrastructure.storage.base import CacheStorageBackend
 
 logger = logging.getLogger(__name__)
 

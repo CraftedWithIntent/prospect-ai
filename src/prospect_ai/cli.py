@@ -2,7 +2,7 @@
 
 import typer
 
-from crucible_ai import __version__
+from prospect_ai import __version__
 
 app = typer.Typer(help="Crucible: Semantic cache & reverse proxy for LLM inference")
 

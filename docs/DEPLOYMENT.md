@@ -6,10 +6,10 @@ This guide covers deploying Crucible AI in production environments.
 
 ```bash
 # Install
-pip install crucible-ai
+pip install prospect-ai
 
 # Run gateway
-crucible-ai --host 0.0.0.0 --port 8000 --upstream-base-url https://api.openai.com --upstream-api-key $OPENAI_API_KEY
+prospect-ai --host 0.0.0.0 --port 8000 --upstream-base-url https://api.openai.com --upstream-api-key $OPENAI_API_KEY
 
 # Test
 curl -X POST http://localhost:8000/v1/chat/completions \
@@ -31,7 +31,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY pyproject.toml .
-RUN pip install --no-cache-dir crucible-ai
+RUN pip install --no-cache-dir prospect-ai
 
 # Expose gateway port
 EXPOSE 8000
@@ -41,19 +41,19 @@ HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=3 \
   CMD python -c "import httpx; httpx.get('http://localhost:8000/health').raise_for_status()" || exit 1
 
 # Run gateway
-CMD ["crucible-ai", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["prospect-ai", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
 ### Run Container
 
 ```bash
 docker run -d \
-  --name crucible-ai \
+  --name prospect-ai \
   --port 8000:8000 \
   -e CRUCIBLE_UPSTREAM_BASE_URL="https://api.openai.com" \
   -e CRUCIBLE_UPSTREAM_API_KEY="$OPENAI_API_KEY" \
   -e CRUCIBLE_CACHE_BACKEND="memory" \
-  crucible-ai:latest
+  prospect-ai:latest
 ```
 
 ## Kubernetes Deployment
@@ -87,21 +87,21 @@ kubectl create secret generic crucible-secrets \
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crucible-ai
+  name: prospect-ai
   namespace: default
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: crucible-ai
+      app: prospect-ai
   template:
     metadata:
       labels:
-        app: crucible-ai
+        app: prospect-ai
     spec:
       containers:
-      - name: crucible-ai
-        image: ghcr.io/craftedwithintent/crucible-ai:1.0.0
+      - name: prospect-ai
+        image: ghcr.io/craftedwithintent/prospect-ai:1.0.0
         ports:
         - containerPort: 8000
           name: http
@@ -142,11 +142,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: crucible-ai
+  name: prospect-ai
   namespace: default
 spec:
   selector:
-    app: crucible-ai
+    app: prospect-ai
   type: ClusterIP
   ports:
   - protocol: TCP
@@ -163,8 +163,8 @@ kubectl apply -f secrets.yaml
 kubectl apply -f deployment.yaml
 
 # Verify
-kubectl get pods -l app=crucible-ai
-kubectl logs deployment/crucible-ai -f
+kubectl get pods -l app=prospect-ai
+kubectl logs deployment/prospect-ai -f
 ```
 
 ## Reverse Proxy Setup (Nginx)
@@ -173,7 +173,7 @@ kubectl logs deployment/crucible-ai -f
 
 ```nginx
 upstream crucible_backend {
-    server crucible-ai:8000 max_fails=3 fail_timeout=30s;
+    server prospect-ai:8000 max_fails=3 fail_timeout=30s;
 }
 
 server {
@@ -314,7 +314,7 @@ For distributed deployments, use Redis backend (no size limit).
 - [ ] Enable audit logging (all requests)
 - [ ] Use strong passwords for Redis (if used)
 - [ ] Run container as non-root user
-- [ ] Keep dependencies updated (`pip install --upgrade crucible-ai`)
+- [ ] Keep dependencies updated (`pip install --upgrade prospect-ai`)
 
 ## Troubleshooting
 
@@ -356,4 +356,4 @@ For distributed deployments, use Redis backend (no size limit).
 
 ---
 
-**Need help?** Open an issue: https://github.com/CraftedWithIntent/crucible-ai/issues
+**Need help?** Open an issue: https://github.com/CraftedWithIntent/prospect-ai/issues

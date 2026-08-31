@@ -1,6 +1,6 @@
 """Crucible domain models."""
 
-from crucible_ai.domain.types import (
+from prospect_ai.domain.types import (
     CachedResponse,
     CacheEntry,
     CacheHitType,
