@@ -1,5 +1,85 @@
 # Contributing to Prospect AI
 
+👋 **We actively welcome community contributions!** Whether you're optimizing cache performance, adding a storage backend, or improving documentation — your help makes Prospect AI better for everyone.
+
+## 🎯 Quick Start for Contributors
+
+### New to Prospect AI?
+
+1. **Pick an issue:** Browse [#good-first-issue](https://github.com/CraftedWithIntent/prospect-ai/labels/good%20first%20issue) or [#help-wanted](https://github.com/CraftedWithIntent/prospect-ai/labels/help%20wanted) labels
+2. **Review ideas:** See [docs/CONTRIBUTION_IDEAS.md](docs/CONTRIBUTION_IDEAS.md) for 20+ contribution ideas (🟢 Easy → 🔴 Hard)
+3. **Comment on issue:** Let us know you're interested
+4. **Follow the guide:** Setup, code, test, submit PR
+5. **Get feedback:** We'll review and merge if it meets criteria
+
+## Help Wanted
+
+These issues are ready for community pickup. **All skill levels welcome!**
+
+### 🟢 Good First Issues (Easy, 0.5–2 hours)
+
+Perfect for learning Prospect AI. No deep architecture knowledge needed.
+
+- **Add similarity threshold configuration** — Make L2 threshold configurable per request
+- **Implement Redis backend** — Distributed caching with Redis (starter template provided)
+- **Add cache metrics endpoint** — `/metrics` endpoint showing hit rate, latency, tokens saved
+- **Performance benchmarking CLI** — Benchmark L1 vs L2 vs upstream latency
+- **Docker Compose example** — Multi-container setup with OpenAI + Prospect AI
+- **Cache eviction policy** — LRU/LFU cache eviction when storage grows
+- **Embedding model selector** — Support multiple embedding models (BAAI/bge-small, onnx-community)
+- **Response streaming validation** — Test cached vs upstream response parity
+- **Cost calculator** — Calculate $ saved vs upstream API costs
+- **Batch similarity search** — Speed up L2 lookup for large caches
+
+### 🟡 Medium Issues (Intermediate, 2–4 hours)
+
+Requires understanding Prospect AI internals (server, proxy, storage).
+
+- **SQLite-Vec backend** — Vector database for semantic search (schema + schema migration)
+- **Multi-provider routing** — Route to OpenAI/Anthropic/Bedrock based on cost/latency
+- **Advanced similarity metrics** — Support cosine, euclidean, manhattan distances
+- **Semantic cache visualization** — Dashboard showing cache hits, embeddings, cost savings
+- **Query rewriting** — Auto-reformat queries to improve cache hit rates
+- **Observability hooks** — OpenTelemetry integration for monitoring
+- **Gradual cache warming** — Pre-compute embeddings for known queries
+- **Negative caching** — Cache error responses (rate limits, API errors)
+- **Result post-processing** — Clean/normalize cached responses
+- **Integration tests** — Test with real LLM providers (Claude, GPT-4)
+
+### 🔴 Hard Issues (Advanced, 4+ hours)
+
+Requires deep knowledge of embeddings, vector math, or distributed systems.
+
+- **Quantized embeddings** — Reduce embedding size via quantization (int8, fp16)
+- **Distributed semantic cache** — Multi-node cache with embedding sync
+- **Approximate nearest neighbor search** — FAISS/HNSW for fast L2 lookup (10k+ cached responses)
+- **Adaptive thresholding** — ML-based threshold tuning per domain
+- **Embedding drift detection** — Detect when model updates require cache invalidation
+- **Hybrid search** — Combine BM25 + semantic similarity for better recall
+- **Cache compression** — Store responses compressed with zstd/brotli
+- **Federated learning** — Train embedding models on cached data without exposing queries
+
+---
+
+**👉 [See docs/CONTRIBUTION_IDEAS.md](docs/CONTRIBUTION_IDEAS.md) for detailed descriptions, acceptance criteria, and implementation hints for all ideas.**
+
+---
+
+## The Contribution Path
+
+1. **Pick an issue** (🟢 Good First Issue recommended)
+2. **Comment on GitHub issue:** "I'd like to work on this"
+3. **Read relevant docs:** This file + [docs/CONTRIBUTION_IDEAS.md](docs/CONTRIBUTION_IDEAS.md)
+4. **Setup dev environment:** Follow "Setup" section below
+5. **Implement & test:** Write code, run tests, ensure 80%+ coverage
+6. **Submit PR:** Link to GitHub issue, describe changes
+7. **Iterate:** Address reviewer feedback
+8. **Merge:** We'll squash + merge when ready
+
+**Pro tip:** Start with 🟢 Good First Issues to learn the codebase, then tackle harder issues.
+
+---
+
 Thank you for contributing! This guide explains how to develop, test, and submit changes to Prospect AI.
 
 ## Setup
