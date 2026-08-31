@@ -1,12 +1,12 @@
-# Crucible AI: Semantic Cache & Reverse Proxy for LLM Inference
+# Prospect AI: Semantic Cache & Reverse Proxy for LLM Inference
 
-![Crucible AI](https://img.shields.io/badge/Crucible%20AI-Semantic%20Cache-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue) ![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
+![Prospect AI](https://img.shields.io/badge/Prospect%20AI-Semantic%20Cache-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue) ![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
 
 **High-performance reverse proxy that intercepts, deduplicates, and caches semantically identical model queries—preventing wasted token compute and cutting latency to under 15ms.**
 
-## What is Crucible AI?
+## What is Prospect AI?
 
-Crucible AI is an intelligent gateway (reverse proxy) between your LLM applications and upstream providers (OpenAI, Anthropic, etc.). It combines two-tier semantic caching (exact-match + embedding-based similarity) with smart fallback routing to reduce costs, improve latency, and ensure high availability.
+Prospect AI is an intelligent gateway (reverse proxy) between your LLM applications and upstream providers (OpenAI, Anthropic, etc.). It combines two-tier semantic caching (exact-match + embedding-based similarity) with smart fallback routing to reduce costs, improve latency, and ensure high availability.
 
 ### Problem
 
@@ -33,7 +33,7 @@ pip install -e .
 
 ### Basic Usage
 
-#### 1. Start Crucible AI Proxy
+#### 1. Start Prospect AI Proxy
 
 ```bash
 prospect-ai start --port 8000 --similarity 0.92
@@ -77,13 +77,13 @@ Cache Statistics:
 
 ## Build Your First Cached LLM App
 
-Crucible AI shines as a drop-in reverse proxy for any LLM application. Here's a complete example:
+Prospect AI shines as a drop-in reverse proxy for any LLM application. Here's a complete example:
 
 ### Example: Chat Service with Semantic Caching
 
-A FastAPI service that uses Crucible to cache LLM responses:
+A FastAPI service that uses Prospect to cache LLM responses:
 
-**1. Start Crucible proxy (Terminal 1)**
+**1. Start Prospect proxy (Terminal 1)**
 
 ```bash
 prospect-ai start --port 8000 --similarity 0.92
@@ -99,7 +99,7 @@ import time
 
 app = FastAPI()
 
-# Point to Crucible proxy instead of OpenAI directly
+# Point to Prospect proxy instead of OpenAI directly
 client = OpenAI(
     base_url="http://localhost:8000/v1",
     api_key="your-openai-api-key"
@@ -110,7 +110,7 @@ class Message(BaseModel):
 
 @app.post("/chat")
 def chat(message: Message):
-    """Chat endpoint that automatically benefits from Crucible caching."""
+    """Chat endpoint that automatically benefits from Prospect caching."""
     start = time.time()
     response = client.chat.completions.create(
         model="gpt-4",
@@ -169,7 +169,7 @@ cd examples/llm-chat-with-caching
 pip install -r requirements.txt
 export OPENAI_API_KEY="your-api-key-here"
 
-# Terminal 1: Start Crucible
+# Terminal 1: Start Prospect
 prospect-ai start --port 8000
 
 # Terminal 2: Start chat app
@@ -237,7 +237,7 @@ See [examples/README.md](examples/README.md) for more examples and use cases.
 ```
 User App (OpenAI SDK)
     ↓
-Crucible Proxy Server (FastAPI)
+Prospect Proxy Server (FastAPI)
     ├─→ 1. Normalize Request
     │     └─→ Strip system prompt, canonicalize JSON
     ├─→ 2. L1 Exact Match (SHA-256 hash)
@@ -309,7 +309,7 @@ prospect-ai/
 ### crucible.yaml
 
 ```yaml
-# Crucible gateway configuration
+# Prospect gateway configuration
 
 server:
   port: 8000
@@ -424,7 +424,7 @@ docker-compose up
 prospect-ai [OPTIONS] COMMAND
 
 Commands:
-  start       Start the Crucible proxy gateway
+  start       Start the Prospect proxy gateway
   stats       Display cache performance metrics
   cache       Cache management (list, clear, export)
   config      Show or validate configuration
@@ -447,7 +447,7 @@ Examples:
 ```
 Usage: prospect-ai start [OPTIONS]
 
-Start the Crucible AI proxy gateway.
+Start the Prospect AI proxy gateway.
 
 Options:
   --port PORT                        Listening port (default: 8000)
@@ -639,7 +639,7 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-**No Shared Dependencies:** Crucible is completely decoupled from other CraftedWithIntent products. It works standalone as a semantic caching reverse proxy for any LLM API.
+**No Shared Dependencies:** Prospect is completely decoupled from other CraftedWithIntent products. It works standalone as a semantic caching reverse proxy for any LLM API.
 
 ---
 
