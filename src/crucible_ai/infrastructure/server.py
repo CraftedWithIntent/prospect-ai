@@ -10,7 +10,7 @@ from fastapi.responses import StreamingResponse
 
 from crucible_ai.core.normalizer import normalize_payload, payload_to_cache_key
 from crucible_ai.infrastructure.proxy_gateway import ProxyGateway
-from crucible_ai.infrastructure.storage.base import CacheBackend
+from crucible_ai.infrastructure.storage.base import CacheStorageBackend
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class OpenAIGateway:
 
     def __init__(
         self,
-        storage_backend: CacheBackend,
+        storage_backend: CacheStorageBackend,
         upstream_base_url: str = "https://api.openai.com/v1",
         upstream_api_key: str = "",
         similarity_threshold: float = 0.92,
@@ -71,11 +71,17 @@ class OpenAIGateway:
                     detail=validation_err.detail,
                 )
 
-            model = body.get("model")
-            messages = body.get("messages")
+            model = body.get("model", "")
+            messages = body.get("messages", [])
             temperature = body.get("temperature", 0.7)
             max_tokens = body.get("max_tokens")
             stream = body.get("stream", False)
+
+            if not model or not messages:
+                raise HTTPException(
+                    status_code=400,
+                    detail="model and messages are required",
+                )
 
             norm_result = self._normalize_and_hash(model, messages, temperature, max_tokens)
             if isinstance(norm_result, ValidationError):
@@ -88,12 +94,13 @@ class OpenAIGateway:
             cached_entry = await self.storage.get_by_hash(cache_key)
             if cached_entry:
                 logger.info(f"L1 cache hit: {cache_key[:8]}...")
-                return self._format_response(
-                    cached_entry.response_text,
-                    model,
-                    cached_entry.tokens_used,
-                    "stop",
-                )
+                if cached_entry.response_text and model:
+                    return self._format_response(
+                        cached_entry.response_text,
+                        model,
+                        cached_entry.tokens_used,
+                        "stop",
+                    )
 
             if stream:
                 return StreamingResponse(

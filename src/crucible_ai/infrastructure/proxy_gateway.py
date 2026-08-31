@@ -11,7 +11,7 @@ from typing import Any
 import httpx
 
 from crucible_ai.domain.types import CacheEntry
-from crucible_ai.infrastructure.storage.base import CacheBackend
+from crucible_ai.infrastructure.storage.base import CacheStorageBackend
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class ProxyGateway:
         self,
         upstream_base_url: str = "https://api.openai.com/v1",
         upstream_api_key: str = "",
-        cache_backend: CacheBackend | None = None,
+        cache_backend: CacheStorageBackend | None = None,
         similarity_threshold: float = 0.92,
         max_retries: int = 3,
         timeout_seconds: float = 30.0,
@@ -63,7 +63,8 @@ class ProxyGateway:
             status, response_data = await self._send_request(url, headers, request_body)
 
             if status == 200:
-                content = response_data.get("choices", [{}])[0].get("message", {}).get("content", "")
+                content_obj = response_data.get("choices", [{}])[0]
+                content = content_obj.get("message", {}).get("content", "")
                 usage = response_data.get("usage", {})
                 self._enqueue_cache_store(cache_key, content, usage)
                 return content, usage
