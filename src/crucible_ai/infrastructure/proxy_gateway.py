@@ -67,7 +67,8 @@ class ProxyGateway:
                 content_obj = response_data.get("choices", [{}])[0]
                 content = content_obj.get("message", {}).get("content", "")
                 usage = response_data.get("usage", {})
-                self._enqueue_cache_store(cache_key, content, usage, json.dumps(request_body.get("messages", [])))
+                request_text = json.dumps(request_body.get("messages", []))
+                self._enqueue_cache_store(cache_key, content, usage, request_text)
                 return content, usage
 
             if status == 429:
@@ -120,7 +121,10 @@ class ProxyGateway:
 
                     if data_str == "[DONE]":
                         if self.cache_backend and full_response:
-                            self._enqueue_cache_store(cache_key, full_response, {}, json.dumps(request_body.get("messages", [])))
+                            request_text = json.dumps(request_body.get("messages", []))
+                            self._enqueue_cache_store(
+                                cache_key, full_response, {}, request_text
+                            )
                         yield "data: [DONE]"
                         break
 
