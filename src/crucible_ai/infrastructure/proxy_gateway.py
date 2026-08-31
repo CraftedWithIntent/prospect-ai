@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import httpx
+from crucible_ai.core.embedder import get_embedder
 
 from crucible_ai.domain.types import CacheEntry
 from crucible_ai.infrastructure.storage.base import CacheStorageBackend
@@ -66,7 +67,7 @@ class ProxyGateway:
                 content_obj = response_data.get("choices", [{}])[0]
                 content = content_obj.get("message", {}).get("content", "")
                 usage = response_data.get("usage", {})
-                self._enqueue_cache_store(cache_key, content, usage)
+                self._enqueue_cache_store(cache_key, content, usage, json.dumps(request_body.get("messages", [])))
                 return content, usage
 
             if status == 429:
@@ -119,7 +120,7 @@ class ProxyGateway:
 
                     if data_str == "[DONE]":
                         if self.cache_backend and full_response:
-                            self._enqueue_cache_store(cache_key, full_response, {})
+                            self._enqueue_cache_store(cache_key, full_response, {}, json.dumps(request_body.get("messages", [])))
                         yield "data: [DONE]"
                         break
 
@@ -155,14 +156,18 @@ class ProxyGateway:
         cache_key: str,
         response_text: str,
         usage: dict[str, int],
+        request_text: str = "",
     ) -> None:
-        """Enqueue response for background cache storage."""
+        """Enqueue response for background cache storage with embedding."""
         if not self.cache_backend:
             return
 
+        embedder = get_embedder()
+        embedding = embedder.embed(request_text) if request_text else []
+
         entry = CacheEntry(
             request_hash=cache_key,
-            embedding_vector=[],
+            embedding_vector=embedding,
             response_text=response_text,
             finish_reason="stop",
             tokens_used=usage.get("completion_tokens", 0),

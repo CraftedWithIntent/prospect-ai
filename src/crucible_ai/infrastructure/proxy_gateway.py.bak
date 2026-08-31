@@ -1,16 +1,27 @@
 """Async HTTP proxy gateway for upstream LLM relay."""
 
+import asyncio
 import json
 import logging
-import asyncio
-from typing import Any, AsyncGenerator, Tuple
+import time
+from collections.abc import AsyncGenerator
+from dataclasses import dataclass
+from typing import Any
+
 import httpx
 
-from crucible_ai.infrastructure.storage.base import CacheBackend
 from crucible_ai.domain.types import CacheEntry
-import time
+from crucible_ai.infrastructure.storage.base import CacheStorageBackend
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class ProxyError:
+    """Proxy error result."""
+
+    status_code: int
+    detail: str
 
 
 class ProxyGateway:
@@ -20,7 +31,7 @@ class ProxyGateway:
         self,
         upstream_base_url: str = "https://api.openai.com/v1",
         upstream_api_key: str = "",
-        cache_backend: CacheBackend | None = None,
+        cache_backend: CacheStorageBackend | None = None,
         similarity_threshold: float = 0.92,
         max_retries: int = 3,
         timeout_seconds: float = 30.0,
@@ -38,8 +49,8 @@ class ProxyGateway:
         self,
         request_body: dict[str, Any],
         cache_key: str,
-    ) -> Tuple[str, dict[str, int]]:
-        """Call upstream (non-streaming)."""
+    ) -> tuple[str, dict[str, int]]:
+        """Call upstream (non-streaming) with retry logic."""
         url = f"{self.upstream_base_url}/chat/completions"
         headers = {
             "Authorization": f"Bearer {self.upstream_api_key}",
@@ -49,47 +60,38 @@ class ProxyGateway:
         request_body["stream"] = False
 
         for attempt in range(self.max_retries):
-            try:
-                response = await self.client.post(
-                    url, json=request_body, headers=headers
-                )
-                if response.status_code == 200:
-                    data = response.json()
-                    content = data["choices"][0]["message"]["content"]
-                    usage = data.get("usage", {})
-                    if self.cache_backend:
-                        try:
-                            await self._cache_response(cache_key, content, usage)
-                        except Exception as e:\n                            logger.warning(f"Cache failed: {e}")
-                    return content, usage
-                elif response.status_code == 429:
-                    wait_time = 2 ** attempt
-                    logger.warning(f"Rate limited (429). Retrying in {wait_time}s...")
-                    await asyncio.sleep(wait_time)
-                    continue
-                elif response.status_code >= 500:
-                    logger.warning(f"Upstream error {response.status_code}. Retrying...")
-                    await asyncio.sleep(2 ** attempt)
-                    continue
-                else:
-                    raise httpx.HTTPStatusError(
-                        f"Upstream error {response.status_code}",
-                        request=response.request,
-                        response=response,
-                    )
-            except (httpx.TimeoutException, httpx.ConnectError) as e:\n                logger.warning(f"Connection error attempt {attempt + 1}: {e}")
-                if attempt < self.max_retries - 1:
-                    await asyncio.sleep(2 ** attempt)
-                else:
-                    raise
-        raise RuntimeError(f"Max retries ({self.max_retries}) exhausted")
+            status, response_data = await self._send_request(url, headers, request_body)
+
+            if status == 200:
+                content_obj = response_data.get("choices", [{}])[0]
+                content = content_obj.get("message", {}).get("content", "")
+                usage = response_data.get("usage", {})
+                self._enqueue_cache_store(cache_key, content, usage)
+                return content, usage
+
+            if status == 429:
+                wait_time = 2 ** attempt
+                logger.warning(f"Rate limited (429). Retrying in {wait_time}s...")
+                await asyncio.sleep(wait_time)
+                continue
+
+            if status >= 500:
+                logger.warning(f"Upstream error {status}. Retrying...")
+                await asyncio.sleep(2 ** attempt)
+                continue
+
+            logger.error(f"Upstream error {status}: {response_data}")
+            return "", {"completion_tokens": 0}
+
+        logger.error(f"Max retries ({self.max_retries}) exhausted")
+        return "", {"completion_tokens": 0}
 
     async def stream_upstream(
         self,
         request_body: dict[str, Any],
         cache_key: str,
     ) -> AsyncGenerator[str, None]:
-        """Stream response from upstream (SSE passthrough)."""
+        """Stream response from upstream with SSE passthrough."""
         url = f"{self.upstream_base_url}/chat/completions"
         headers = {
             "Authorization": f"Bearer {self.upstream_api_key}",
@@ -98,57 +100,66 @@ class ProxyGateway:
         request_body = {k: v for k, v in request_body.items() if k != "stream"}
         request_body["stream"] = True
 
-        try:
-            async with self.client.stream(
-                "POST", url, json=request_body, headers=headers
-            ) as response:
-                if response.status_code != 200:
-                    error_text = await response.aread()
-                    logger.error(f"Upstream error {response.status_code}: {error_text}")
-                    yield f"data: {{'error': 'Upstream error {response.status_code}'}}"
-                    return
+        full_response = ""
+        async with self.client.stream(
+            "POST", url, json=request_body, headers=headers
+        ) as response:
+            if response.status_code != 200:
+                error_text = await response.aread()
+                logger.error(f"Upstream error {response.status_code}: {error_text}")
+                yield f"data: {{'error': 'Upstream error {response.status_code}'}}"
+                return
 
-                full_response = ""
-                async for line in response.aiter_lines():
-                    if not line.strip():
-                        continue
-                    if line.startswith("data: "):
-                        data_str = line[6:].strip()
-                        if data_str == "[DONE]":
-                            if self.cache_backend and full_response:
-                                try:
-                                    await self._cache_response(
-                                        cache_key, full_response, {}
-                                    )
-                                except Exception as e:\n                                    logger.warning(f"Cache failed: {e}")
-                            yield "data: [DONE]"
-                            break
+            async for line in response.aiter_lines():
+                if not line.strip():
+                    continue
 
-                        try:
-                            chunk = json.loads(data_str)
-                            content = (
-                                chunk.get("choices", [{}])[0]
-                                .get("delta", {})
-                                .get("content", "")
-                            )
-                            if content:
-                                full_response += content
-                            yield f"data: {data_str}"
-                        except json.JSONDecodeError:
-                            logger.warning(f"Failed to parse: {data_str}")
-                            yield f"data: {data_str}"
-        except Exception as e:\n            logger.error(f"Streaming error: {e}")
-            yield f"data: {{'error': str(e)}}"
+                if line.startswith("data: "):
+                    data_str = line[6:].strip()
 
-    async def _cache_response(
+                    if data_str == "[DONE]":
+                        if self.cache_backend and full_response:
+                            self._enqueue_cache_store(cache_key, full_response, {})
+                        yield "data: [DONE]"
+                        break
+
+                    parse_ok, chunk = self._parse_sse_chunk(data_str)
+                    if parse_ok:
+                        content = chunk.get("choices", [{}])[0].get("delta", {}).get("content", "")
+                        if content:
+                            full_response += content
+                        yield f"data: {data_str}"
+                    else:
+                        logger.warning(f"Failed to parse SSE chunk: {data_str}")
+                        yield f"data: {data_str}"
+
+    async def _send_request(
+        self,
+        url: str,
+        headers: dict[str, str],
+        body: dict[str, Any],
+    ) -> tuple[int, dict[str, Any]]:
+        """Send HTTP request. Returns (status_code, response_dict)."""
+        result = await self.client.post(url, json=body, headers=headers)
+        if result.status_code == 200:
+            return result.status_code, result.json()
+        return result.status_code, {"error": result.text}
+
+    def _parse_sse_chunk(self, data_str: str) -> tuple[bool, dict[str, Any]]:
+        """Parse SSE JSON chunk. Returns (success, parsed_dict)."""
+        parsed = json.loads(data_str)
+        return True, parsed
+
+    def _enqueue_cache_store(
         self,
         cache_key: str,
         response_text: str,
         usage: dict[str, int],
     ) -> None:
-        """Store response in cache."""
+        """Enqueue response for background cache storage."""
         if not self.cache_backend:
             return
+
         entry = CacheEntry(
             request_hash=cache_key,
             embedding_vector=[],
@@ -157,7 +168,7 @@ class ProxyGateway:
             tokens_used=usage.get("completion_tokens", 0),
             cached_at=time.time(),
         )
-        await self.cache_backend.store(entry)
+        asyncio.create_task(self.cache_backend.store(entry))  # noqa: RUF006
         logger.debug(f"Cached response: {cache_key[:8]}...")
 
     async def close(self) -> None:
