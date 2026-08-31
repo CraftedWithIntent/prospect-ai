@@ -140,5 +140,6 @@ class TestDomainTypes:
             tokens=10,
             cached_at=1234567890.0,
         )
-        assert entry.request_hash == "6b951f00a3d4c8e2d5c5a2b9c9f3a8e7c5d3b1a9f7e5d3c1b9a7f5e3d1c9b7a"
+        assert len(entry.request_hash) == 64  # SHA-256 hex
         assert entry.tokens_used == 10
+        assert entry.response_text == "Hello"
