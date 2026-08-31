@@ -30,7 +30,8 @@ def select_primary_route(payload: dict[str, Any]) -> UpstreamRoute:
     return UpstreamRoute(
         provider=provider,
         model=model,
-        api_key_idx=0,\n        is_fallback=False,
+        api_key_idx=0,
+        is_fallback=False,
     )
 
 

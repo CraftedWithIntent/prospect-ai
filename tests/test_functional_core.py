@@ -90,8 +90,8 @@ class TestNormalizer:
         }
         # Note: current normalizer doesn't strip whitespace from content
         # This test documents behavior; Phase 2 can enhance
-        key1 = payload_to_cache_key(payload1)
-        key2 = payload_to_cache_key(payload2)
+        _key1 = payload_to_cache_key(payload1)
+        _key2 = payload_to_cache_key(payload2)
         # For now, these will be different (whitespace preserved in content)
         # Phase 2: Enhanced normalization
 
