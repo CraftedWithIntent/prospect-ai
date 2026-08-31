@@ -3,7 +3,7 @@ requires = ["hatchling", "build>=1.0.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "prospect-ai"
+name = "prospect-cache-ai"
 version = "1.0.0"
 description = "Semantic cache + reverse proxy for LLM inference"
 readme = "README.md"
