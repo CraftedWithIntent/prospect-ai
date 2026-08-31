@@ -1,6 +1,6 @@
-# Crucible: Semantic Cache & Reverse Proxy for LLM Inference
+# Crucible AI: Semantic Cache & Reverse Proxy for LLM Inference
 
-![Crucible](https://img.shields.io/badge/Crucible-Semantic%20Cache-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue) ![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
+![Crucible AI](https://img.shields.io/badge/Crucible%20AI-Semantic%20Cache-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue) ![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
 
 **High-performance reverse proxy that intercepts, deduplicates, and caches semantically identical model queries—preventing wasted token compute and cutting latency to under 15ms.**
 
@@ -8,13 +8,13 @@
 
 LLM inference is expensive, slow, and non-deterministic. Applications frequently pay full price and incur 1,000ms–3,000ms latency on user queries that are semantically identical (e.g., "How do I reset my password?" vs. "I forgot my password, how to reset?"). Standard exact-string caching (Redis key-value) achieves <5% cache hit rates on natural language.
 
-## The Solution: Crucible
+## The Solution: Crucible AI
 
-Crucible is the "pick and shovel" every production AI app needs: an intelligent gateway between your backend and upstream LLM providers. By adding semantic vector similarity matching and smart fallback routing, you immediately improve performance and reduce operational overhead.
+Crucible AI is the "pick and shovel" every production AI app needs: an intelligent gateway between your backend and upstream LLM providers. By adding semantic vector similarity matching and smart fallback routing, you immediately improve performance and reduce operational overhead.
 
 ### Core Value Proposition
 
-| Metric | Without Crucible | With Crucible |
+| Metric | Without Crucible AI | With Crucible AI |
 |--------|------------------|---------------|
 | Repeated / Semantic Query Lookup | Upstream LLM required | Cached (0 tokens) |
 | Response Latency (Cache Hit) | 1,200ms – 3,500ms | < 15ms |
@@ -29,23 +29,23 @@ Crucible is the "pick and shovel" every production AI app needs: an intelligent 
 
 ```bash
 # Via pip
-pip install crucible-proxy
+pip install crucible-ai
 
 # Via Docker
-docker run -p 8080:8080 -e UPSTREAM_KEY=sk-... ghcr.io/craftedwithintent/crucible:latest
+docker run -p 8080:8080 -e UPSTREAM_KEY=sk-... ghcr.io/craftedwithintent/crucible-ai:latest
 
 # From source
-git clone https://github.com/CraftedWithIntent/crucible.git
-cd crucible
+git clone https://github.com/CraftedWithIntent/crucible-ai.git
+cd crucible-ai
 uv pip install -e .
 ```
 
 ### Basic Usage
 
-#### 1. Start Crucible Proxy
+#### 1. Start Crucible AI Proxy
 
 ```bash
-crucible start --port 8080 --similarity 0.92
+crucible-ai start --port 8080 --similarity 0.92
 ```
 
 #### 2. Replace OPENAI_BASE_URL in Your App
@@ -69,7 +69,7 @@ That's it. Cache hits are automatic.
 #### 3. Monitor Cache Performance
 
 ```bash
-crucible stats
+crucible-ai stats
 ```
 
 Output:
@@ -165,9 +165,9 @@ crucible/
 ├── README.md                   # This file
 ├── config/
 │   └── crucible.yaml           # Default gateway config (thresholds, backends)
-├── src/crucible/
+├── src/crucible_ai/
 │   ├── __init__.py             # Public API
-│   ├── cli.py                  # Typer CLI (`crucible start`, `crucible stats`)
+│   ├── cli.py                  # Typer CLI (`crucible-ai start`, `crucible-ai stats`)
 │   ├── domain/
 │   │   └── types.py            # Immutable domain models (CacheEntry, Route, etc.)
 │   ├── core/
@@ -269,23 +269,23 @@ logging:
 uv pip install -e ".[dev]"
 
 # Run tests
-pytest tests --cov=src/crucible
+pytest tests --cov=src/crucible_ai
 
 # Start proxy
-crucible start --port 8080 --similarity 0.92
+crucible-ai start --port 8080 --similarity 0.92
 ```
 
 ### Docker
 
 ```bash
 # Build locally
-docker build -t crucible:latest .
+docker build -t crucible-ai:latest .
 
 # Run with environment variables
 docker run -p 8080:8080 \
   -e OPENAI_API_KEY=sk-... \
   -e ANTHROPIC_API_KEY=sk-ant-... \
-  crucible:latest
+  crucible-ai:latest
 ```
 
 ### Kubernetes
@@ -307,7 +307,7 @@ spec:
     spec:
       containers:
       - name: crucible
-        image: ghcr.io/craftedwithintent/crucible:latest
+        image: ghcr.io/craftedwithintent/crucible-ai:latest
         ports:
         - containerPort: 8080
         env:

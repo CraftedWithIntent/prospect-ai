@@ -1,7 +1,7 @@
 """Abstract base class for pluggable cache storage backends."""
 
 from abc import ABC, abstractmethod
-from crucible.domain.types import CacheEntry
+from crucible_ai.domain.types import CacheEntry
 
 
 class CacheStorageBackend(ABC):

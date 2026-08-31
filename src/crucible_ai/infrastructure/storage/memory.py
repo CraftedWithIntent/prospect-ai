@@ -1,8 +1,8 @@
 """In-memory cache storage backend."""
 
-from crucible.domain.types import CacheEntry
-from crucible.infrastructure.storage.base import CacheStorageBackend
-from crucible.core.similarity import cosine_similarity
+from crucible_ai.domain.types import CacheEntry
+from crucible_ai.infrastructure.storage.base import CacheStorageBackend
+from crucible_ai.core.similarity import cosine_similarity
 
 
 class MemoryCacheBackend(CacheStorageBackend):
