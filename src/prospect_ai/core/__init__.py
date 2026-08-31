@@ -1,4 +1,4 @@
-"""Crucible core functional logic."""
+"""Prospect core functional logic."""
 
 from prospect_ai.core.normalizer import (
     normalize_messages,

@@ -40,7 +40,7 @@ class OpenAIGateway:
         """Initialize gateway."""
         self.storage = storage_backend
         self.similarity_threshold = similarity_threshold
-        self.app = FastAPI(title="Crucible AI Gateway", version="0.1.0")
+        self.app = FastAPI(title="Prospect AI Gateway", version="0.1.0")
         self.proxy = ProxyGateway(
             upstream_base_url=upstream_base_url,
             upstream_api_key=upstream_api_key,

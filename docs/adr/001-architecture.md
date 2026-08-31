@@ -1,11 +1,11 @@
-# ADR 001: Crucible Architecture — Hybrid Two-Tier Cache + Smart Fallback Routing
+# ADR 001: Prospect Architecture — Hybrid Two-Tier Cache + Smart Fallback Routing
 
 ## Status
 Accepted
 
 ## Context
 
-Crucible is a semantic cache reverse proxy for LLM inference. Production LLM apps frequently issue semantically identical queries (e.g., "How do I reset my password?" vs "I forgot my password, how to reset?") and pay full token costs every time. Standard exact-string caching achieves <5% hit rates.
+Prospect is a semantic cache reverse proxy for LLM inference. Production LLM apps frequently issue semantically identical queries (e.g., "How do I reset my password?" vs "I forgot my password, how to reset?") and pay full token costs every time. Standard exact-string caching achieves <5% hit rates.
 
 The gateway must:
 
@@ -44,7 +44,7 @@ Adopt **Hybrid Two-Tier Cache + Functional Core** architecture:
 ### Request Flow
 ```mermaid
 flowchart TD
-    A["User App"] -->|OpenAI SDK Request| B["Crucible Proxy"]
+    A["User App"] -->|OpenAI SDK Request| B["Prospect Proxy"]
     B -->|1. Normalize| C["Request Normalizer"]
     C -->|Canonical JSON| D["SHA-256 Hash"]
     D -->|L1 Lookup| E{Exact Match?}
@@ -74,7 +74,7 @@ flowchart TD
 ```mermaid
 sequenceDiagram
     participant App as User App
-    participant Proxy as Crucible Proxy
+    participant Proxy as Prospect Proxy
     participant Cache as Cache Backend
     participant Embedder as Embedder
     participant Upstream as Upstream LLM

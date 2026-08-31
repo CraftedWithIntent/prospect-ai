@@ -1,7 +1,7 @@
-"""LLM Chat App with Crucible AI Caching Example
+"""LLM Chat App with Prospect AI Caching Example
 
 This is a complete, production-ready example of a chat service
-optimized with Crucible AI for 8-11x token savings and <15ms latency.
+optimized with Prospect AI for 8-11x token savings and <15ms latency.
 
 Run:
     export OPENAI_API_KEY="sk-..."
@@ -31,7 +31,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable not set")
 
-# Initialize OpenAI client pointing to Crucible proxy
+# Initialize OpenAI client pointing to Prospect proxy
 client = openai.OpenAI(base_url=CRUCIBLE_BASE_URL, api_key=OPENAI_API_KEY)
 
 # Cache metrics tracker
@@ -62,8 +62,8 @@ cache_metrics = CacheMetrics()
 
 # FastAPI app
 app = FastAPI(
-    title="LLM Chat with Crucible Caching",
-    description="Chat service optimized with Crucible AI semantic caching",
+    title="LLM Chat with Prospect Caching",
+    description="Chat service optimized with Prospect AI semantic caching",
     version="1.0.0",
 )
 
@@ -103,9 +103,9 @@ class MetricsResponse(BaseModel):
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest) -> ChatResponse:
     """
-    Chat endpoint with Crucible caching.
+    Chat endpoint with Prospect caching.
     
-    Forwards to OpenAI via Crucible proxy which:
+    Forwards to OpenAI via Prospect proxy which:
     1. Tries L1 exact match cache (SHA-256 hash) → <1ms
     2. Tries L2 semantic cache (embedding similarity) → <15ms
     3. Falls back to upstream OpenAI → 1,200-3,500ms
@@ -113,7 +113,7 @@ async def chat(request: ChatRequest) -> ChatResponse:
     start = time.time()
 
     try:
-        # Call OpenAI via Crucible proxy
+        # Call OpenAI via Prospect proxy
         response = client.chat.completions.create(
             model=request.model,
             messages=[asdict(m) for m in request.messages],
@@ -186,20 +186,20 @@ async def health() -> dict:
 async def root() -> dict:
     """Welcome page."""
     return {
-        "name": "LLM Chat with Crucible Caching",
+        "name": "LLM Chat with Prospect Caching",
         "endpoints": {
             "chat": "POST /chat — Send chat message",
             "metrics": "GET /metrics — View cache performance",
             "health": "GET /health — Health check",
         },
-        "crucible_proxy": CRUCIBLE_BASE_URL,
+        "prospect_proxy": CRUCIBLE_BASE_URL,
         "cache_metrics": asdict(cache_metrics),
     }
 
 # Main
 if __name__ == "__main__":
     print("Starting LLM Chat Service...")
-    print(f"✓ Using Crucible proxy: {CRUCIBLE_BASE_URL}")
+    print(f"✓ Using Prospect proxy: {CRUCIBLE_BASE_URL}")
     print(f"✓ Chat endpoint: http://localhost:9000/chat")
     print(f"✓ Metrics: http://localhost:9000/metrics")
     print()

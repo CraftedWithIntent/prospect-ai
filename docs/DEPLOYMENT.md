@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide covers deploying Crucible AI in production environments.
+This guide covers deploying Prospect AI in production environments.
 
 ## Quick Start (Local)
 
@@ -64,7 +64,7 @@ docker run -d \
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: crucible-config
+  name: prospect-config
 namespace: default
 data:
   CRUCIBLE_HOST: "0.0.0.0"
@@ -76,7 +76,7 @@ data:
 ### Secret (API Keys)
 
 ```bash
-kubectl create secret generic crucible-secrets \
+kubectl create secret generic prospect-secrets \
   --from-literal=CRUCIBLE_UPSTREAM_API_KEY=$OPENAI_API_KEY \
   --from-literal=CRUCIBLE_UPSTREAM_BASE_URL="https://api.openai.com"
 ```
@@ -108,9 +108,9 @@ spec:
 
         envFrom:
         - configMapRef:
-            name: crucible-config
+            name: prospect-config
         - secretRef:
-            name: crucible-secrets
+            name: prospect-secrets
 
         livenessProbe:
           httpGet:
@@ -172,7 +172,7 @@ kubectl logs deployment/prospect-ai -f
 ### Configuration
 
 ```nginx
-upstream crucible_backend {
+upstream prospect_backend {
     server prospect-ai:8000 max_fails=3 fail_timeout=30s;
 }
 
@@ -184,10 +184,10 @@ server {
     ssl_certificate_key /etc/ssl/private/example.com.key;
 
     # Cache headers
-    proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=crucible:10m max_size=1g;
+    proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=prospect:10m max_size=1g;
 
     location /v1/chat/completions {
-        proxy_pass http://crucible_backend;
+        proxy_pass http://prospect_backend;
 
         # Headers
         proxy_set_header Host $host;
@@ -210,7 +210,7 @@ server {
     }
 
     location /health {
-        proxy_pass http://crucible_backend;
+        proxy_pass http://prospect_backend;
         access_log off;
     }
 }
@@ -254,9 +254,9 @@ curl http://localhost:8000/health
 ```bash
 curl http://localhost:8000/metrics
 # Prometheus format:
-# crucible_cache_hits_total{backend="memory"} 1234
-# crucible_cache_misses_total{backend="memory"} 567
-# crucible_upstream_latency_seconds_bucket{le="0.5"} 89
+# prospect_cache_hits_total{backend="memory"} 1234
+# prospect_cache_misses_total{backend="memory"} 567
+# prospect_upstream_latency_seconds_bucket{le="0.5"} 89
 ```
 
 ### Logging

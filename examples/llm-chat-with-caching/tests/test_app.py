@@ -1,4 +1,4 @@
-"""Tests for LLM Chat App with Crucible Caching"""
+"""Tests for LLM Chat App with Prospect Caching"""
 
 import pytest
 from fastapi.testclient import TestClient
@@ -23,7 +23,7 @@ def test_root_endpoint():
     data = response.json()
     assert "name" in data
     assert "endpoints" in data
-    assert data["name"] == "LLM Chat with Crucible Caching"
+    assert data["name"] == "LLM Chat with Prospect Caching"
 
 
 @patch("app.client.chat.completions.create")
@@ -128,7 +128,7 @@ def test_cache_hit_detection(mock_create):
     assert response.status_code == 200
     data = response.json()
     assert "latency_ms" in data
-    # Note: actual caching logic is in Crucible, not this app
+    # Note: actual caching logic is in Prospect, not this app
     # We're just verifying the response structure
 
 
