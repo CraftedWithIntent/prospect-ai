@@ -1,6 +1,6 @@
-# Crucible AI Examples
+# Prospect AI Examples
 
-Complete, production-ready examples demonstrating Crucible AI semantic caching in real-world scenarios.
+Complete, production-ready examples demonstrating Prospect AI semantic caching in real-world scenarios.
 
 ## Examples
 
@@ -8,7 +8,7 @@ Complete, production-ready examples demonstrating Crucible AI semantic caching i
 
 **Directory:** `llm-chat-with-caching/`
 
-A FastAPI chat service that uses Crucible AI as a reverse proxy to reduce LLM costs by 8-11x.
+A FastAPI chat service that uses Prospect AI as a reverse proxy to reduce LLM costs by 8-11x.
 
 **Features:**
 - Full chat conversation support
@@ -19,7 +19,7 @@ A FastAPI chat service that uses Crucible AI as a reverse proxy to reduce LLM co
 
 **Quick Start:**
 ```bash
-# Terminal 1: Start Crucible proxy
+# Terminal 1: Start Prospect proxy
 prospect-ai --host 0.0.0.0 --port 8000 \
   --upstream-base-url https://api.openai.com \
   --upstream-api-key $OPENAI_API_KEY
@@ -96,12 +96,12 @@ curl -X POST http://localhost:9000/chat \
 
 ---
 
-## How Crucible Works
+## How Prospect Works
 
 ```
 User Request
     ↓
-Crucible Proxy (reverse proxy)
+Prospect Proxy (reverse proxy)
     ├─ L1: SHA-256 exact match → Hit (↓ <1ms)
     ├─ L2: Embedding similarity → Hit (↓ <15ms)
     └─ Miss → Forward to OpenAI (↓ 1,200-3,500ms)
@@ -133,7 +133,7 @@ pytest tests/ -v
 # Build chat app image
 docker build -t llm-chat-app examples/llm-chat-with-caching/.
 
-# Run with Crucible
+# Run with Prospect
 docker-compose up
 ```
 
@@ -150,14 +150,14 @@ kubectl apply -f examples/llm-chat-with-caching/k8s-deployment.yaml
 
 ### Example: 10,000 requests/day
 
-**Without Crucible:**
+**Without Prospect:**
 ```
 10,000 requests × 250 tokens/request = 2.5M tokens
 2.5M tokens × $0.00002/token = $50/day
 = $1,500/month
 ```
 
-**With Crucible (50% hit rate):**
+**With Prospect (50% hit rate):**
 ```
 5,000 cached requests × 0 tokens = 0 tokens
 5,000 upstream requests × 250 tokens = 1.25M tokens
