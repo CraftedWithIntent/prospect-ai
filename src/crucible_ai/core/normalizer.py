@@ -5,7 +5,6 @@ Canonicalize requests so semantically identical queries hash to the same value.
 """
 
 import json
-import re
 from typing import Any
 
 

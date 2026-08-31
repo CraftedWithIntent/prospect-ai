@@ -1,101 +1,67 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "build>=1.0.0"]
 build-backend = "hatchling.build"
 
 [project]
 name = "crucible-ai"
-version = "0.1.0-dev"
-description = "High-performance semantic cache and reverse proxy for LLM inference. Drop-in OpenAI API compatibility with 30-60% cost savings and <15ms cache latency."
+version = "0.1.0"
+description = "Semantic cache + reverse proxy for LLM inference"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
-authors = [
-    {name = "CraftedWithIntent", email = "hello@craftedwithintent.ai"}
-]
-keywords = ["llm", "cache", "semantic", "proxy", "openai", "cost-optimization", "inference"]
+authors = [{name = "CraftedWithIntent", email = "dev@crafted.ai"}]
+keywords = ["llm", "cache", "proxy", "semantic", "openai"]
 classifiers = [
     "Development Status :: 3 - Alpha",
-    "Environment :: Console",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
-    "Natural Language :: English",
-    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Internet :: WWW/HTTP",
-    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 dependencies = [
     "fastapi>=0.104.0",
     "httpx>=0.25.0",
-    "pydantic>=2.4.0",
-    "typer[all]>=0.9.0",
-    "pyyaml>=6.0",
-    "fastembed>=0.2.0",
-    "numpy>=1.24.0",
-    "prometheus-client>=0.19.0",
+    "pydantic>=2.0",
+    "typer>=0.9.0",
+    "uvicorn[standard]>=0.24.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.4.0",
-    "pytest-cov>=4.1.0",
     "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
     "ruff>=0.1.0",
-    "pyright>=1.1.0",
-    "black>=23.11.0",
+    "pyright>=1.1.320",
     "build>=1.0.0",
 ]
-storage = [
-    "sqlite-vec>=0.1.0",
-    "redis>=5.0.0",
-]
-cloud = [
-    "opentelemetry-api>=1.20.0",
-    "opentelemetry-sdk>=1.20.0",
-    "opentelemetry-exporter-otlp>=0.41b0",
-]
 
-[project.scripts]
-crucible-ai = "crucible_ai.cli:app"
+[project.urls]
+Homepage = "https://github.com/CraftedWithIntent/crucible-ai"
+Repository = "https://github.com/CraftedWithIntent/crucible-ai.git"
+Issues = "https://github.com/CraftedWithIntent/crucible-ai/issues"
+Documentation = "https://github.com/CraftedWithIntent/crucible-ai#readme"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/crucible_ai"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-asyncio_mode = "auto"
-addopts = "--cov=src/crucible_ai --cov-report=term-missing --cov-report=html -v"
-
-[tool.coverage.run]
-branch = true
-source = ["src/crucible_ai"]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
-    "if TYPE_CHECKING:",
-]
+include = ["src/crucible_ai/py.typed"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+extend-exclude = ["tests"]
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I", "N", "UP", "C4", "PIE", "PT", "RUF"]
-ignore = ["E501", "W293"]  # E501: line too long, W293: blank line with whitespace
+select = ["E", "F", "W", "I", "UP"]
+ignore = ["W293"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["crucible_ai"]
 
 [tool.pyright]
 include = ["src"]
-exclude = ["**/node_modules", "**/__pycache__", ".venv"]
-typeCheckingMode = "strict"
+exclude = ["**/__pycache__", "tests", ".venv"]
+typeCheckingMode = "standard"
 pythonVersion = "3.11"

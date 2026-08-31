@@ -1,6 +1,7 @@
 """Command-line interface for Crucible."""
 
 import typer
+
 from crucible_ai import __version__
 
 app = typer.Typer(help="Crucible: Semantic cache & reverse proxy for LLM inference")
@@ -20,7 +21,8 @@ def start(
 ) -> None:
     """Start Crucible proxy server."""
     typer.echo(
-        f"Starting Crucible on port {port} (similarity_threshold={similarity_threshold}, backend={backend})"
+        f"Starting Crucible on port {port} "
+        f"(similarity_threshold={similarity_threshold}, backend={backend})"
     )
     typer.echo("Phase 1: Server implementation in progress")
 

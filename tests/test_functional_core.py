@@ -1,10 +1,11 @@
 """Functional tests for Crucible core logic."""
 
 import pytest
-from crucible_ai.core.similarity import cosine_similarity, evaluate_similarity
+
 from crucible_ai.core.normalizer import normalize_payload, payload_to_cache_key
 from crucible_ai.core.router import select_primary_route
-from crucible_ai.domain.types import SimilarityScore, CacheEntry, ProviderName
+from crucible_ai.core.similarity import cosine_similarity
+from crucible_ai.domain.types import CacheEntry, ProviderName, SimilarityScore
 
 
 class TestSimilarity:

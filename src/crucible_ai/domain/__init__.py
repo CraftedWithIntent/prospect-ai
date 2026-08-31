@@ -1,9 +1,9 @@
 """Crucible domain models."""
 
 from crucible_ai.domain.types import (
+    CachedResponse,
     CacheEntry,
     CacheHitType,
-    CachedResponse,
     NormalizedRequest,
     ProviderName,
     SimilarityScore,

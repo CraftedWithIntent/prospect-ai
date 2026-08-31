@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 from typing import Any
+
 from crucible_ai.domain.types import CacheEntry
 
 
@@ -15,7 +16,6 @@ class CacheStorageBackend(ABC):
     @abstractmethod
     async def get_by_hash(self, hash_key: str) -> CacheEntry | None:
         """Retrieve cached entry by SHA-256 hash (L1 exact match)."""
-        pass
 
     @abstractmethod
     async def search_semantic(
@@ -26,17 +26,14 @@ class CacheStorageBackend(ABC):
         
         Returns: List of (CacheEntry, similarity_score) tuples sorted by score desc.
         """
-        pass
 
     @abstractmethod
     async def store(self, entry: CacheEntry) -> None:
         """Store new cache entry."""
-        pass
 
     @abstractmethod
     async def delete_by_hash(self, hash_key: str) -> bool:
         """Delete cached entry. Returns True if found and deleted."""
-        pass
 
     @abstractmethod
     async def invalidate_by_tag(self, tag: str) -> int:
@@ -45,9 +42,7 @@ class CacheStorageBackend(ABC):
         
         Returns: Number of entries deleted.
         """
-        pass
 
     @abstractmethod
     async def stats(self) -> dict[str, Any]:
         """Return storage statistics (entry count, memory usage, etc.)."""
-        pass

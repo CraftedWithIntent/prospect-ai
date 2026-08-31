@@ -5,10 +5,10 @@ Pure data structures representing cache entries, routing decisions, and metrics.
 No I/O, no side effects — just value objects.
 """
 
-from dataclasses import dataclass, field
-from enum import Enum, StrEnum
-from typing import Any, Literal
 import hashlib
+from dataclasses import dataclass, field
+from enum import StrEnum
+from typing import Any
 
 
 class CacheHitType(StrEnum):
